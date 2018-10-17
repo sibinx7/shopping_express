@@ -1,0 +1,16 @@
+extends  layout
+
+block content
+	.container
+		.row
+			.col-12.col-md-8.col-lg-6.mr-auto.ml-auto
+				.card.mt-5.mb-5
+					.card-body
+						form(method="POST", action="/login-process")
+							.form-group
+								input.form-control(name="username", placeholder="Username")
+							.form-group
+								input.form-control(type="password", name="password", placeholder="Password")
+							.form-group
+								button.btn.btn-block.btn-primary(type="submit")
+									| Login
