@@ -16,13 +16,13 @@ router.use(function(req, res, next){
 /* GET users listing. */
 router.get('/',function(req, res, next) {
 	console.log("User page")
-	console.log(req)
-	console.log(req.user)
 	var user = req.user || {};
   res.render('user', {
     title: "Logged User",
     user: user
   });
 });
+
+
 
 module.exports = router;
