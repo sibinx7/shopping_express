@@ -5,6 +5,7 @@ const passport = require("passport");
 var localStrategy = require("passport-local").Strategy;
 var Schema = mongoose.Schema;
 var Users = require("../models/User");
+
 import {	UserController } from "../controllers/user.ctrl";
 
 

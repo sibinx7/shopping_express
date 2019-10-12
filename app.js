@@ -11,6 +11,8 @@ var Users = require("./models/User");
 
 mongoose.connect('mongodb://localhost/shopping', { useNewUrlParser: true })
   .catch(function(err){
+    console.log("mongoose connection error")
+    console.log(JSON.stringify(err))
     console.log("Connection error")
     // console.log(err)
   });
@@ -23,7 +25,9 @@ database.once("open", function(){
 })
 
 // console.log(database)
-database.on("error", function(){
+database.on("error", function(error){
+  console.log("Database connection error")
+  console.log(error)
   console.log("Connection error")
 });
 

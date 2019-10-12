@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "babel-node ./bin/www",
     "dev": "PORT=8100 nodemon ./bin/www"
   },
   "dependencies": {
@@ -20,10 +20,16 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "pug": "2.0.0-beta11",
+    "rimraf": "^3.0.0",
     "underscore": "^1.9.1"
   },
   "main": "app.js",
   "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/node": "^7.6.3",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/preset-env": "^7.6.3",
     "nodemon": "^1.18.4"
   },
   "author": "",

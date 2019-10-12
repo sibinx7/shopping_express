@@ -26,7 +26,7 @@ router.get('/',function(req, res, next) {
   });
 });
 
-routes.get("/:id", (req, res, next) => {
+router.get("/:id", (req, res, next) => {
 	const id = req.body.id;
 	const userObject = UserController.getByID(id)
 
