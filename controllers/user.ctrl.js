@@ -1,6 +1,7 @@
+import { User	} from "../models/User";
 import {	getByID	} from "../services/user.service";
 
-class User {
+class UserController {
 
 	/**
 	 * @description Get user object with id
@@ -20,8 +21,10 @@ class User {
 
 	}
 
-	static create = () => {
-
+	static create = (formData, callback) => {
+		Users.create(formData, function(err, data){			
+			callback(err, data)
+		})
 	}
 
 	static edit = () => {

@@ -3,6 +3,9 @@ var router = express.Router();
 var passport = require("passport");
 
 
+import {	UserController	} from "../controllers/user.ctrl";
+
+
 router.use(function(req, res, next){
 	console.log("Check Auth before start...")
 	console.log(req.isAuthenticated())
@@ -25,7 +28,7 @@ router.get('/',function(req, res, next) {
 
 routes.get("/:id", (req, res, next) => {
 	const id = req.body.id;
-	const userObject = User.getByID(id)
+	const userObject = UserController.getByID(id)
 
 })
 

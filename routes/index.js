@@ -5,6 +5,7 @@ const passport = require("passport");
 var localStrategy = require("passport-local").Strategy;
 var Schema = mongoose.Schema;
 var Users = require("../models/User");
+import {	UserController } from "../controllers/user.ctrl";
 
 
 
@@ -65,18 +66,19 @@ router.get("/sign-up", function(req, res, next){
 
 router.post("/authenticate", function(req, res, next){
   if(req.body.username && req.body.password){
-    console.log("Data Present...")
+
+		const formData = req.body;
+
+		
     try{
-			Users.create(req.body, function(err, small){
-				console.log("Save....")
-				console.log(JSON.stringify(small));
-				console.log(err)
+			UserController.create(formData, (err, data) => {
 				if(!err){
 					res.redirect("/users")
 				}else{
 					res.redirect("/login")
 				}
 			})
+
     }catch(e){
       console.log(e)
     }

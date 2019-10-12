@@ -5,10 +5,16 @@ block content
 		.row
 			.col-12.col-md-8.col-lg-6.mr-auto.ml-auto
 				form(action="/authenticate", method="post")
+					.form-group 
+						input.form-control(name="first_name", placeholder="Enter your first name, ex: John")
+					.form-group 
+						input.form-control(name="Last name", placeholder="Enter you last name ex: Doe")					
 					.form-group
-						input.form-control(name="username", placeholder="Username")
+						input.form-control(name="username", placeholder="Enter your Username")
+					.form-group 
+						input.form-control(name="email", placeholder="Enter your email address")
 					.form-group
-						input.form-control(type="password", name="password", placeholder="Password")
+						input.form-control(type="password", name="password", placeholder="Enter your Password")
 					.form-group
 						button.btn.btn-block.btn-primary(type="submit")
 							| Create
