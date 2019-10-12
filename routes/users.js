@@ -23,6 +23,12 @@ router.get('/',function(req, res, next) {
   });
 });
 
+routes.get("/:id", (req, res, next) => {
+	const id = req.body.id;
+	const userObject = User.getByID(id)
+
+})
+
 
 
 module.exports = router;
