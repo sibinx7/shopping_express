@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "start": "babel-node ./bin/www",
-    "dev": "PORT=8100 nodemon ./bin/www"
+    "dev": "PORT=8200 nodemon ./bin/www"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
+    "dotenv": "^8.1.0",
     "express": "^4.17.1",
     "express-graphql": "^0.6.12",
     "express-session": "^1.15.6",
