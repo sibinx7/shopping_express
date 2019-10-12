@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "PORT=9200 nodemon ./bin/www"
+    "dev": "PORT=8100 nodemon ./bin/www"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
