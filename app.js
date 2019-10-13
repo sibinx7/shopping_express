@@ -11,11 +11,12 @@ var csrf = require("csurf");
 
 
 const MONGO_DB_URL = process.env.MONGODB_URI || "mongodb://localhost/shopping";
+mongoose.set('useCreateIndex', true)
 mongoose.connect(MONGO_DB_URL, { useNewUrlParser: true })
   .catch(function(err){
-    console.log("mongoose connection error")
-    console.log(JSON.stringify(err))
-    console.log("Connection error")
+    // console.log("mongoose connection error")
+    // console.log(JSON.stringify(err))
+    // console.log("Connection error")
     // console.log(err)
   });
 
@@ -23,19 +24,19 @@ mongoose.connect(MONGO_DB_URL, { useNewUrlParser: true })
 var database = mongoose.connection;
 
 database.once("open", function(){
-  console.log("Connection success")
+  // console.log("Connection success")
 })
 
 // console.log(database)
 database.on("error", function(error){
-  console.log("Database connection error")
-  console.log(error)
-  console.log("Connection error")
+  // console.log("Database connection error")
+  // console.log(error)
+  // console.log("Connection error")
 });
 
 database.on("open", function(){
-  "connected successfully"
-})
+
+});
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
