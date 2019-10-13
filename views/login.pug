@@ -7,6 +7,7 @@ block content
 				.card.mt-5.mb-5
 					.card-body
 						form(method="POST", action="/login-process")
+							input(type="hidden", name="_csrf", value=token)
 							.form-group
 								input.form-control(name="username", placeholder="Username")
 							.form-group

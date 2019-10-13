@@ -5,6 +5,7 @@ block content
 		.row
 			.col-12.col-md-8.col-lg-6.mr-auto.ml-auto
 				form(action="/authenticate", method="post")
+					input(type="hidden", name="_csrf", value=token)
 					.form-group 
 						input.form-control(name="first_name", placeholder="Enter your first name, ex: John")
 					.form-group
