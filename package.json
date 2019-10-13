@@ -6,10 +6,9 @@
     "node": "12.10.0"
   },
   "scripts": {
-    "start": " ./node_modules/.bin/babel-node ./bin/www &> /dev/null",
+    "start": "node ./bin/www",
     "dev": "nodemon --exec babel-node ./bin/www",
-    "build-dev": "./node_modules/.bin/babel-node ./bin/www",
-    "build" : "./node_modules/.bin/pm2 start ./bin/www --interpreter ./node_modules/.bin/babel-node",
+    "build" : "node ./bin/www",
     "preinstall": "npm cache clean --force"
   },
   "dependencies": {

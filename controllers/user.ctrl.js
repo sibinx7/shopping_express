@@ -1,27 +1,27 @@
-import User from "../models/User";
-import {	getUserByID	} from "../services/user.service";
+const User = require("../models/User");
+const getUserByID = require("../services/user.service").getUserByID;
 
-export class UserController {
+// import User from "../models/User";
+// import {	getUserByID	} from "../services/user.service";
 
-	/**
-	 * @description Get user object with id
-	 * @params id string 
-	 * @return user object 
-	 */
-	static getByID = (id) => {
-		return getUserByID(id);
-	}
+// export class UserController {
+//
+// 	static create = (formData, callback) => {
+// 		console.log("Create section....")
+// 		try{
+// 			User.create(formData, function(err, data){
+// 				callback(err, data)
+// 			})
+// 		}catch (e) {
+// 			console.log("User create error.");
+// 			console.log(e)
+// 		}
+//
+// 	}
+// }
 
-
-	static list = () => {
-
-	}
-
-	static show = () => {
-
-	}
-
-	static create = (formData, callback) => {
+const UserController = {
+	create:(formData, callback) => {
 		console.log("Create section....")
 		try{
 			User.create(formData, function(err, data){
@@ -31,23 +31,10 @@ export class UserController {
 			console.log("User create error.");
 			console.log(e)
 		}
-
 	}
-
-	static edit = () => {
-
-	}
-
-	static update = () => {
-
-	}
-
-	static delete = () => {
-		
-	}
-
 }
 
+module.exports = UserController;
 
 
 

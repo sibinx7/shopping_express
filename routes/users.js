@@ -3,7 +3,9 @@ var router = express.Router();
 var passport = require("passport");
 
 
-import {	UserController	} from "../controllers/user.ctrl";
+// import {	UserController	} from "../controllers/user.ctrl";
+
+const UserController = require("../controllers/user.ctrl");
 
 
 router.use(function(req, res, next){

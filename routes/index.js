@@ -4,11 +4,13 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 var localStrategy = require("passport-local").Strategy;
 var Schema = mongoose.Schema;
-import User from "../models/User";
+var User = require("../models/User");
+// import User from "../models/User";
 
 // const UserController = require("../controllers/user.ctrl");
 
-import {UserController} from "../controllers/user.ctrl";
+var UserController = require("../controllers/user.ctrl");
+// import {UserController} from "../controllers/user.ctrl";
 
 
 

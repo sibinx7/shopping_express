@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-import UserAPIController from "../controllers/user.api.ctrl";
+var UserAPIController = require("../controllers/user.api.ctrl");
+// import UserAPIController from "../controllers/user.api.ctrl";
 
 
 

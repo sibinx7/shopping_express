@@ -1,7 +1,8 @@
-import User from "../models/User";
+const User = require("../models/User")
+// import User from "../models/User";
 
 
-export const getUserByID = async (id) => {
+exports.getUserByID = async (id) => {
 	let user = {};
 	try{
 		user = User.find({__id: id});
