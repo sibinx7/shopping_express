@@ -20,21 +20,48 @@ router.post("/login", (req, res, next) => {
 		console.log(JSON.stringify(response))
 		console.log("After process...")
 		if(response.success){
-			const token = jwt.sign({
-				username: response.user.username,
-				password: response.user.password
-			}, "777");
+			try{
+				const token = jwt.sign({
+					username: response.user.username,
+					password: response.user.password
+				}, "777");
 
-			res.json({
-				user: response.user,
-				token
-			})
+				res.json({
+					user: response.user,
+					token
+				})
+			}catch (e) {
+				res.json({
+					success: false,
+				})
+			}
+
 		}else{
 			res.json({
 				success: false,
 			})
 		}
 	})
+});
+
+
+router.post("/register", (req, res, next) => {
+	const formData = req.body;
+	UserAPIController.create(formData, ({user, success}) => {
+		if(success){
+			res.json({
+				success: true,
+				user,
+				redirect_to: "sign-in"
+			})
+		}else{
+			res.json({
+				success: false,
+				status: 404,
+			})
+		}
+	})
+
 });
 
 router.get("/user", (req, res, next) => {

@@ -3,13 +3,9 @@ var User  = require("../models/User");
 
 
 export default class UserAPIController{
-
-
 	static login = (formData, callback) => {
-		console.log("Reached here User api controller")
-		console.log(JSON.stringify(formData));
 		User.findOne({
-			username: formData.username,
+			email: formData.email ,
 			password: formData.password
 		}, (err, user) => {
 			if(!err){
@@ -25,7 +21,37 @@ export default class UserAPIController{
 				})
 			}
 		});
-	}
+	};
+
+	static create = (formData, callback) => {
+		console.log("Form data creation...")
+		console.log(JSON.stringify(formData))
+		if(formData.email && formData.password){
+			const {	day, month, year, username, password, first_name, last_name, email } = formData;
+			let dob = `${year}-${month}-${day}`;
+			console.log(dob)
+			dob = new Date(dob);
+			console.log(dob)
+			console.log("Date is above")
+			User.create({
+				username,password, email,
+				first_name, last_name, dob
+			}, (err, user) => {
+				console.log(JSON.stringify(err));
+				console.log("Create data...");
+				if(!err){
+					callback({
+						user,
+						success: true
+					});
+				}else(
+					callback({
+						success: false
+					})
+				)
+			})
+		}
+	};
 
 	static get = () => {
 

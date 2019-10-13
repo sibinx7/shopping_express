@@ -12,6 +12,7 @@ if(process.env.NODE_ENV === "production"){
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var csrf = require("csurf");
+var cors = require("cors");
 
 
 const MONGO_DB_URL = process.env.MONGODB_URI || "mongodb://localhost/shopping";
@@ -56,7 +57,17 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use("/api", usersAPIRouter); // csrf token exception
+
+
+const localOptions = {
+	origin:["http://localhost:3000", /\.*.com$/],
+	optionsSuccessStatus: 200,
+}
+
+app.use(cors());
+app.options('*', cors());
+
+app.use("/api",  usersAPIRouter); // csrf token exception
 
 
 app.use(cookieParser());
