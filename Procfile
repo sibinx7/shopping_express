@@ -1,1 +1,1 @@
-web: npm run build 
+web: ./node_modules/.bin/babel-node ./app.js 
