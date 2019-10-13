@@ -1,7 +1,7 @@
 {
   "name": "shopping-express",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.0.1",
+  "private": false,
   "scripts": {
     "start": "babel-node ./bin/www",
     "dev": "nodemon babel-node ./bin/www",
@@ -36,7 +36,7 @@
     "@babel/preset-env": "^7.6.3",
     "nodemon": "^1.19.3"
   },
-  "author": "",
+  "author": "Sibin Xavier",
   "license": "ISC",
-  "description": ""
+  "description": "Simple express application"
 }
