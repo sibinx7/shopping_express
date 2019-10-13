@@ -5,6 +5,10 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var passport = require("passport");
 var session = require('express-session');
+if(process.env.NODE_ENV === "production"){
+	session = require("cookie-session")
+}
+
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var csrf = require("csurf");

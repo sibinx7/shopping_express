@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon --exec babel-node ./bin/www",
-    "build" : "node ./bin/www",
+    "build": "node ./bin/www",
     "preinstall": "npm cache clean --force"
   },
   "dependencies": {
@@ -19,6 +19,7 @@
     "@babel/preset-env": "^7.6.3",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
+    "cookie-session": "^1.3.3",
     "cross-env": "^6.0.3",
     "csurf": "^1.10.0",
     "debug": "~4.1.1",
@@ -31,18 +32,16 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.4",
     "morgan": "~1.9.1",
+    "nodemon": "^1.19.3",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "pm2": "^4.0.0",
     "pug": "2.0.4",
     "rimraf": "^3.0.0",
-    "underscore": "^1.9.1",
-    "nodemon": "^1.19.3"
+    "underscore": "^1.9.1"
   },
   "main": "app.js",
-  "devDependencies": {
-
-  },
+  "devDependencies": {},
   "author": "Sibin Xavier",
   "license": "ISC",
   "description": "Simple express application"
