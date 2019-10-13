@@ -10,7 +10,8 @@ var mongoose = require("mongoose");
 var csrf = require("csurf");
 
 
-mongoose.connect('mongodb://localhost/shopping', { useNewUrlParser: true })
+const MONGO_DB_URL = process.env.MONGODB_URI || "mongodb://localhost/shopping";
+mongoose.connect(MONGO_DB_URL, { useNewUrlParser: true })
   .catch(function(err){
     console.log("mongoose connection error")
     console.log(JSON.stringify(err))
