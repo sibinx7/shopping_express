@@ -39,6 +39,7 @@ database.on("open", function(){
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var graphQLRouter = require("./routes/graphql");
+const usersAPIRouter = require("./routes/users.api");
 
 const csrfProtection = csrf({cookie: true});
 var app = express();
@@ -81,6 +82,7 @@ app.use(passport.session());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/graphql", graphQLRouter);
+app.use("/api/login", usersAPIRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
