@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": false,
   "scripts": {
-    "start": "babel-node ./bin/www",
-    "dev": "nodemon babel-node ./bin/www",
+    "start": "babel-node ./bin/www &> /dev/null",
+    "dev": "nodemon --exec babel-node ./bin/www",
     "build": "babel-node ./bin/www"
   },
   "dependencies": {
