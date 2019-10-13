@@ -1,7 +1,7 @@
-import {	User } from "../models/User";
+import User from "../models/User";
 
 
-exports.getUserByID = async (id) => {
+export const getUserByID = async (id) => {
 	let user = {};
 	try{
 		user = User.find({__id: id});

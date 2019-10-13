@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "babel-node ./bin/www",
+    "start": "nodemon  --exec babel-node ./bin/www",
     "dev": "PORT=8200 nodemon ./bin/www"
   },
   "dependencies": {

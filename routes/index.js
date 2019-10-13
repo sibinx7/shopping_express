@@ -4,15 +4,18 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 var localStrategy = require("passport-local").Strategy;
 var Schema = mongoose.Schema;
-var Users = require("../models/User");
+import User from "../models/User";
 
-import {	UserController } from "../controllers/user.ctrl";
+// const UserController = require("../controllers/user.ctrl");
+
+import {UserController} from "../controllers/user.ctrl";
 
 
 
 
 passport.use(new localStrategy(function(username, password, done){
-	const User = Users.findOne({username:username, password: password},function(err,user){
+
+	User.findOne({username:username, password: password},function(err,user){
 		console.log(err)
 		console.log(user)
 			if(!err){
@@ -29,7 +32,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-	Users.findById(id, function(err, user) {
+	User.findById(id, function(err, user) {
 		done(err, user);
 	});
 });
@@ -66,13 +69,17 @@ router.get("/sign-up", function(req, res, next){
 });
 
 router.post("/authenticate", function(req, res, next){
+
+	console.log(JSON.stringify(UserController))
+	console.log("Up controller")
   if(req.body.username && req.body.password){
-
 		const formData = req.body;
-
-		
     try{
 			UserController.create(formData, (err, data) => {
+				console.log("After create")
+				console.log(JSON.stringify(err))
+				console.log(JSON.stringify(data))
+
 				if(!err){
 					res.redirect("/users")
 				}else{
@@ -82,6 +89,7 @@ router.post("/authenticate", function(req, res, next){
 
     }catch(e){
       console.log(e)
+			console.log("Authenticate user errors")
     }
   }else{
     console.log("Username not available..")

@@ -1,7 +1,7 @@
-import { User	} from "../models/User";
-import {	getByID	} from "../services/user.service";
+import User from "../models/User";
+import {	getUserByID	} from "../services/user.service";
 
-class UserController {
+export class UserController {
 
 	/**
 	 * @description Get user object with id
@@ -9,7 +9,7 @@ class UserController {
 	 * @return user object 
 	 */
 	static getByID = (id) => {
-		return getByID(id);
+		return getUserByID(id);
 	}
 
 
@@ -22,9 +22,16 @@ class UserController {
 	}
 
 	static create = (formData, callback) => {
-		Users.create(formData, function(err, data){			
-			callback(err, data)
-		})
+		console.log("Create section....")
+		try{
+			User.create(formData, function(err, data){
+				callback(err, data)
+			})
+		}catch (e) {
+			console.log("User create error.");
+			console.log(e)
+		}
+
 	}
 
 	static edit = () => {
@@ -42,4 +49,5 @@ class UserController {
 }
 
 
-module.export = UserController;
+
+
