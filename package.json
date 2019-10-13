@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": false,
   "scripts": {
-    "start": "./node_modules/.bin/babel-node ./bin/www &> /dev/null",
+    "start": "NODE_ENV=production ./node_modules/.bin/babel-node ./bin/www &> /dev/null",
     "dev": "nodemon --exec babel-node ./bin/www",
     "build": "babel-node ./bin/www &> /dev/null",
     "preinstall": "npm cache clean --force"
