@@ -64,8 +64,10 @@ router.post("/register", (req, res, next) => {
 
 });
 
-router.get("/user", (req, res, next) => {
-
+router.get("/user/show", (req, res, next) => {
+	res.json({
+		user: "Hello"
+	})
 });
 
 
