@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 // var UserAPIController = require("../controllers/user.api.ctrl");
 import UserAPIController from "../controllers/user.api.ctrl";
+import ProjectAPIController from "../controllers/project.api.ctrl";
 import jwt from "jsonwebtoken";
 
 
@@ -87,5 +88,71 @@ router.put("/user/update", (req, res, next) => {
 	})
 
 });
+
+
+router.get("/project", (req, res, next) => {
+	ProjectAPIController.list(({success, projects}) => {
+		if(success){
+			res.json({
+				data: projects,
+				meta:{}
+			})
+		}else{
+			res.json({
+				data: []
+			})
+		}
+	})
+});
+
+router.get("/project/:id", (req, res, next) => {
+	const project_id = req.params.id;
+	ProjectAPIController.show(project_id, ({success, project}) => {
+		if(success){
+			res.json({
+				success,
+				project
+			})
+		}else{
+			res.json({
+				success: false
+			})
+		}
+	})
+})
+
+
+router.post("/project", (req, res, next) => {
+	const formData = req.body;
+	ProjectAPIController.create(formData, ({success, project, errors}) => {
+		if(success){
+			res.json({
+				success: true,
+				project
+			})
+		}else{
+			res.json({
+				success: false,
+			})
+		}
+	})
+});
+
+router.put("/project", (req, res, next) => {
+	const formData = req.body;
+	ProjectAPIController.update(formData, ({success, project, errors}) => {
+		if(success){
+			res.json({
+				success: true,
+				project
+			})
+		}else{
+			res.json({
+				success: false,
+				errors
+			})
+		}
+	});
+})
 
 module.exports = router;
