@@ -57,6 +57,24 @@ export default class UserAPIController{
 
 	}
 
+	static update = (formData, callback) => {
+		formData = omit(formData, "email", "username", "password", "_id", "_v");
+		formData["updated_at"] = new Date();
+		formData["last_active"] = new Date();
+		User.updateOne({_id: formData._id}, formData, (err, write) => {
+			if(!err){
+				callback({
+					success: true,
+					user: formData
+				})
+			}else{
+				callback({
+					success: false
+				})
+			}
+		})
+	}
+
 }
 
 

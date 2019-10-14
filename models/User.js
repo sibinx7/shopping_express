@@ -14,11 +14,15 @@ const UserSchema = mongoose.Schema({
 		type: String,
 		required: true 
 	},
+	gender: String,
+	more_details: String,
 	address: String,
-	country: String,
+	nationality: String,
 	roles: Array,
-	dob: Date,	
-	image: String, 
+	dob: Date,
+	qid_no: Number,
+	photo: String,
+	qid: String,
 	last_active: Date,
 	created_at: Date,	
 	updated_at: Date   

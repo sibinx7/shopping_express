@@ -59,10 +59,6 @@ app.use(express.urlencoded({ extended: false }));
 
 
 
-const localOptions = {
-	origin:["http://localhost:3000", /\.*.com$/],
-	optionsSuccessStatus: 200,
-}
 
 app.use(cors());
 app.options('*', cors());

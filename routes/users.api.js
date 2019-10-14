@@ -68,4 +68,22 @@ router.get("/user", (req, res, next) => {
 
 });
 
+
+router.put("/user/update", (req, res, next) => {
+	const formData = req.body;
+	UserAPIController.update(formData, ({success, user}) => {
+		if(success){
+			res.json({
+				success: true,
+				user
+			})
+		}else{
+			res.json({
+				success: false
+			})
+		}
+	})
+
+});
+
 module.exports = router;
