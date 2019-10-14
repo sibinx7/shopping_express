@@ -27,12 +27,16 @@ export default class UserAPIController{
 		console.log("Form data creation...")
 		console.log(JSON.stringify(formData))
 		if(formData.email && formData.password){
-			const {	day, month, year, username, password, first_name, last_name, email } = formData;
+			const {	day, month, year, password, first_name, last_name, email } = formData;
+			let {	username } = formData
 			let dob = `${year}-${month}-${day}`;
 			console.log(dob)
 			dob = new Date(dob);
 			console.log(dob)
 			console.log("Date is above")
+			if(!username){
+				username = email
+			}
 			User.create({
 				username,password, email,
 				first_name, last_name, dob
