@@ -10,13 +10,19 @@ const ProjectSchema = mongoose.Schema({
 	facebook: String,
 	instagram: String,
 	linkedin: String,
-	published:  Boolean,
 	created_at: Date,
 	updated_at: Date,
 	saved_at: Date,
+	published:  Boolean,
 	draft: Boolean,
+	submitted: Boolean,
+	completed: Boolean,
 	assets: String,
-	image: String
+	image: String,
+	morals:Array,
+	project: Object,
+	how_hear: Array,
+	additional_documents: Array
 });
 
 const Project = mongoose.model('Project', ProjectSchema);
