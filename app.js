@@ -30,6 +30,7 @@ var database = mongoose.connection;
 
 database.once("open", function(){
   // console.log("Connection success")
+	require("./seed/index");
 })
 
 // console.log(database)

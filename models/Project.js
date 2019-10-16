@@ -22,7 +22,8 @@ const ProjectSchema = mongoose.Schema({
 	morals:Array,
 	project: Object,
 	how_hear: Array,
-	additional_documents: Array
+	additional_documents: Array,
+	user_id: String
 });
 
 const Project = mongoose.model('Project', ProjectSchema);

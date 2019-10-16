@@ -27,7 +27,9 @@ const UserSchema = mongoose.Schema({
 	qid: String,
 	last_active: Date,
 	created_at: Date,	
-	updated_at: Date   
+	updated_at: Date,
+	admin: Boolean,
+	super_admin: Boolean
 });
 
 const User = mongoose.model('User', UserSchema);

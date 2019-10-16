@@ -4,7 +4,7 @@ class HelperAPIController {
 	static email_availability (email, callback){
 		console.log(JSON.stringify(email))
 		console.log("Above one is email")
-		User.count({email}, (err, count)=> {
+		User.countDocuments({email}, (err, count)=> {
 			console.log("Inside User modal")
 			console.log(count)
 			console.log(JSON.stringify(err))
