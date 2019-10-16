@@ -19,6 +19,25 @@ export default class ProjectAPIController{
 		});
 	}
 
+	static  list_by_user = (_id, callback) => {
+		if(_id){
+			Project.find({user_id: _id}, (err, projects) => {
+				if(!err){
+					callback({
+						success: true,
+						projects
+					})
+				}else{
+					callback({success: false})
+				}
+			})
+		}else{
+			callback({
+				success: false
+			})
+		}
+	}
+
 	static show = (_id, callback) => {
 		Project.findOne({_id}, (err, project) => {
 			if(!err){

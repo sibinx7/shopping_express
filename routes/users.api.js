@@ -7,6 +7,20 @@ import HelperAPIController from "../controllers/helper.api.ctrl";
 import jwt from "jsonwebtoken";
 
 
+const commonUserResponse = (result) => {
+	const {success, user, projects} = result;
+	let response = {};
+	response["success"] = success;
+	if(success){
+		if(result.user){
+			response["user"] = user;
+		}
+		if(result.projects){
+			response["projects"] = projects;
+		}
+	}
+	return response;
+};
 
 router.post("/login", (req, res, next) => {
 	const formData = req.body;
@@ -142,6 +156,9 @@ router.get("/project/:id", (req, res, next) => {
 
 const projectDataCreateHandler = (req, res, next) => {
 	const formData = req.body;
+	if(req.headers && req.headers["x_current_user_id"]){
+		formData["user_id"] = req.headers["x_current_user_id"];
+	}
 	ProjectAPIController.create(formData, ({success, project, errors}) => {
 		if(success){
 			res.json({
@@ -161,6 +178,9 @@ router.post("/add_project_step1", projectDataCreateHandler);
 
 const projectDataUpdateHandler = (req, res, next) => {
 	const formData = req.body;
+	if(req.headers && req.headers["x_current_user_id"]){
+		formData["user_id"] = req.headers["x_current_user_id"];
+	}
 	ProjectAPIController.update(formData, ({success, project, errors}) => {
 		if(success){
 			res.json({
@@ -185,6 +205,25 @@ router.put("/add_project_step2", projectDataUpdateHandler);
 router.put("/add_project_step3", projectDataUpdateHandler);
 
 
+
+const projectByUserHandler = (req, res, next ) => {
+	let user_id = req.headers["x_user_id"];
+	if(!user_id){
+		user_id = req.query.user_id;
+	}
+	console.log("Current USER with X_USER_ID", user_id)
+	if(user_id){
+		ProjectAPIController.list_by_user(user_id, (result) => {
+			res.json(commonUserResponse(result));
+		})
+	}else{
+		res.json({success: false})
+	}
+};
+
+router.get("/get_projects_by_user", projectByUserHandler)
+
+
 router.post("/change_password", (req, res, next) => {
 	const formData = req.body;
 	UserAPIController.change_password(formData, (result) => {
@@ -199,28 +238,12 @@ const editSettingsHandler = (req, res, next) => {
 		res.json(commonUserResponse(result))
 	});
 };
-
 router.post("/edit_settings", editSettingsHandler);
-
-
-const commonUserResponse = (result) => {
-	const {success, user} = result;
-	let response = {};
-	response["success"] = success;
-	if(success){
-		response["user"] = user;
-	}
-	return response;
-};
-
-
-
 
 
 
 const  emailExistenceHandler = (req, res, next) => {
 	const formData = req.body;
-
 	try{
 		let email = formData.email;
 		if(!email){
@@ -239,13 +262,10 @@ const  emailExistenceHandler = (req, res, next) => {
 			}
 		})
 	}catch (e) {
-		
 	}
-
 }
-
-router.get("/email_availability/:email?", emailExistenceHandler)
-router.post("/email_availability/:email?", emailExistenceHandler)
+router.get("/email_availability/:email?", emailExistenceHandler);
+router.post("/email_availability/:email?", emailExistenceHandler);
 
 
 
@@ -254,10 +274,6 @@ const adminLoginHandler = (req, res, next) => {
 		success: true
 	})
 };
-
-
-
-
 router.post("/admin_login", adminLoginHandler)
 
 module.exports = router;
