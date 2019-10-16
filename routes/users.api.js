@@ -180,6 +180,8 @@ const projectDataUpdateHandler = (req, res, next) => {
 router.put("/project", projectDataUpdateHandler);
 router.post("/add_project_step2", projectDataUpdateHandler);
 router.post("/add_project_step3", projectDataUpdateHandler);
+router.put("/add_project_step2", projectDataUpdateHandler);
+router.put("/add_project_step3", projectDataUpdateHandler);
 
 
 router.post("/change_password", (req, res, next) => {
