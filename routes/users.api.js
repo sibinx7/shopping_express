@@ -101,6 +101,7 @@ const userEditHandler = (req, res, next) => {
 
 router.put("/user/update", userEditHandler);
 router.post("/edit_profile", userEditHandler);
+router.put("/edit_profile", userEditHandler);
 
 
 const getAllProjectHandler = (req, res, next) => {
