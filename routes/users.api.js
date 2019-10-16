@@ -3,6 +3,7 @@ var router = express.Router();
 // var UserAPIController = require("../controllers/user.api.ctrl");
 import UserAPIController from "../controllers/user.api.ctrl";
 import ProjectAPIController from "../controllers/project.api.ctrl";
+import HelperAPIController from "../controllers/helper.api.ctrl";
 import jwt from "jsonwebtoken";
 
 
@@ -212,11 +213,50 @@ const commonUserResponse = (result) => {
 	return response;
 };
 
+
+
+
+
+
+const  emailExistenceHandler = (req, res, next) => {
+	const formData = req.body;
+
+	try{
+		let email = formData.email;
+		if(!email){
+			email = req.params.email;
+		}
+		HelperAPIController.email_availability(email, ({success, count}) => {
+			if(success){
+				res.json({
+					success,
+					count
+				})
+			}else{
+				res.json({
+					success
+				})
+			}
+		})
+	}catch (e) {
+		
+	}
+
+}
+
+router.get("/email_availability/:email?", emailExistenceHandler)
+router.post("/email_availability/:email?", emailExistenceHandler)
+
+
+
 const adminLoginHandler = (req, res, next) => {
 	res.json({
 		success: true
 	})
-}
+};
+
+
+
 
 router.post("/admin_login", adminLoginHandler)
 
