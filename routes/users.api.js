@@ -9,9 +9,6 @@ import jwt from "jsonwebtoken";
 
 router.post("/login", (req, res, next) => {
 	const formData = req.body;
-	console.log(JSON.stringify(req.params));
-	console.log(JSON.stringify(req.body))
-	console.log("Inside routes...")
 	if(!formData){
 		res.json({
 			status: 404
@@ -65,14 +62,28 @@ router.post("/register", (req, res, next) => {
 
 });
 
-router.get("/user/show", (req, res, next) => {
-	res.json({
-		user: "Hello"
+
+const userShowRouteHandler = (req, res, next) => {
+	const _id = req.params.id;
+	UserAPIController.get(_id, ({success, user}) => {
+		if(success){
+			res.json({
+				success: true,
+				user
+			})
+		}else{
+			res.json({
+				success: false
+			})
+		}
 	})
-});
+};
 
+router.get("/user/:id", userShowRouteHandler);
 
-router.put("/user/update", (req, res, next) => {
+router.get("/edit_profile", userShowRouteHandler);
+
+const userEditHandler = (req, res, next) => {
 	const formData = req.body;
 	UserAPIController.update(formData, ({success, user}) => {
 		if(success){
@@ -86,11 +97,13 @@ router.put("/user/update", (req, res, next) => {
 			})
 		}
 	})
+};
 
-});
+router.put("/user/update", userEditHandler);
+router.post("/edit_profile", userEditHandler);
 
 
-router.get("/project", (req, res, next) => {
+const getAllProjectHandler = (req, res, next) => {
 	ProjectAPIController.list(({success, projects}) => {
 		if(success){
 			res.json({
@@ -103,7 +116,10 @@ router.get("/project", (req, res, next) => {
 			})
 		}
 	})
-});
+};
+
+router.get("/project", getAllProjectHandler);
+router.get("/get_all_projects", getAllProjectHandler);
 
 router.get("/project/:id", (req, res, next) => {
 	const project_id = req.params.id;
@@ -122,7 +138,7 @@ router.get("/project/:id", (req, res, next) => {
 })
 
 
-router.post("/project", (req, res, next) => {
+const projectDataCreateHandler = (req, res, next) => {
 	const formData = req.body;
 	ProjectAPIController.create(formData, ({success, project, errors}) => {
 		if(success){
@@ -136,9 +152,12 @@ router.post("/project", (req, res, next) => {
 			})
 		}
 	})
-});
+};
 
-router.put("/project", (req, res, next) => {
+router.post("/project", projectDataCreateHandler);
+router.post("/add_project_step1", projectDataCreateHandler);
+
+const projectDataUpdateHandler = (req, res, next) => {
 	const formData = req.body;
 	ProjectAPIController.update(formData, ({success, project, errors}) => {
 		if(success){
@@ -153,6 +172,49 @@ router.put("/project", (req, res, next) => {
 			})
 		}
 	});
-})
+};
+
+
+
+router.put("/project", projectDataUpdateHandler);
+router.post("/add_project_step2", projectDataUpdateHandler);
+router.post("/add_project_step3", projectDataUpdateHandler);
+
+
+router.post("/change_password", (req, res, next) => {
+	const formData = req.body;
+	UserAPIController.change_password(formData, (result) => {
+		const response = commonUserResponse(result);
+		res.json(response);
+	})
+});
+
+const editSettingsHandler = (req, res, next) => {
+	const formData = req.body;
+	UserAPIController.edit_settings(formData, (result) => {
+		res.json(commonUserResponse(result))
+	});
+};
+
+router.post("/edit_settings", editSettingsHandler);
+
+
+const commonUserResponse = (result) => {
+	const {success, user} = result;
+	let response = {};
+	response["success"] = success;
+	if(success){
+		response["user"] = user;
+	}
+	return response;
+};
+
+const adminLoginHandler = (req, res, next) => {
+	res.json({
+		success: true
+	})
+}
+
+router.post("/admin_login", adminLoginHandler)
 
 module.exports = router;

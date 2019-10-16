@@ -12,7 +12,8 @@ const UserSchema = mongoose.Schema({
 	},
 	password: {
 		type: String,
-		required: true 
+		required: true,
+		select: false
 	},
 	gender: String,
 	more_details: String,
@@ -20,7 +21,8 @@ const UserSchema = mongoose.Schema({
 	nationality: String,
 	roles: Array,
 	dob: Date,
-	qid_no: Number,
+	mobile_no: String,
+	qid_no: String,
 	photo: String,
 	qid: String,
 	last_active: Date,

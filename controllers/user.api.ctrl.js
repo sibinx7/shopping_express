@@ -8,20 +8,22 @@ export default class UserAPIController{
 		User.findOne({
 			email: formData.email ,
 			password: formData.password
-		}, (err, user) => {
-			if(!err){
-				callback({
-					user,
-					success: true,
-					logged: true
-				})
-			}else{
-				callback({
-					success: false,
-					logged: false
-				})
-			}
-		});
+		})
+			.populate("-password")
+			.exec((err, user) => {
+				if(!err){
+					callback({
+						user,
+						success: true,
+						logged: true
+					})
+				}else{
+					callback({
+						success: false,
+						logged: false
+					})
+				}
+			})
 	};
 
 	static create = (formData, callback) => {
@@ -58,15 +60,31 @@ export default class UserAPIController{
 		}
 	};
 
-	static get = () => {
-
+	static get = (_id, callback) => {
+		User.findOne({_id})
+			.populate("-password")
+			.exec((err, user) => {
+				if(!err){
+					callback({
+						success: true,
+						user
+					})
+				}else{
+					callback({
+						success: false
+					})
+				}
+			})
 	}
 
 	static update = (formData, callback) => {
+		console.log(JSON.stringify(formData))
+		const _id = formData._id;
 		formData = omit(formData, "email", "username", "password", "_id", "_v");
 		formData["updated_at"] = new Date();
 		formData["last_active"] = new Date();
-		User.updateOne({_id: formData._id}, formData, (err, write) => {
+		User.updateOne({_id}, formData, (err, write) => {
+			console.log(JSON.stringify(err))
 			if(!err){
 				callback({
 					success: true,
@@ -79,6 +97,49 @@ export default class UserAPIController{
 			}
 		})
 	}
+
+	static change_password = (formData, callback) => {
+		const {	old_password, new_password, _id } = formData;
+		if(new_password && old_password){
+			User.updateOne({_id, password: old_password}, {
+				password: new_password
+			}, (err, user) => {
+				if(!err){
+					callback({
+						success: true,
+						user
+					})
+				}else{
+					callback({
+						success: false
+					})
+				}
+			})
+		}else{
+			callback({success: false})
+		}
+	};
+
+	static edit_settings = (formData, callback) => {
+		const {_id, email } = formData;
+		if(email){
+			User.updateOne({_id},{email}, (err, user) => {
+				if(!err){ // change to single statement
+					callback({
+						success: true,
+						user
+					})
+				}else{
+					callback({
+						success: false
+					})
+				}
+			})
+		}else{
+			callback({success: false})
+		}
+	}
+
 
 }
 
