@@ -5,11 +5,13 @@ import Project from "../models/Project";
 export default class ProjectAPIController{
 
 	static  list = (callback) => {
-		Project.find({}, (err, projects) => {
+		Project.find({}, (err, data) => {
 			if(!err){
 				callback({
 					success: true,
-					projects
+					projects:{
+						data
+					}
  				})
 			}else{
 				callback({
@@ -21,11 +23,13 @@ export default class ProjectAPIController{
 
 	static  list_by_user = (_id, callback) => {
 		if(_id){
-			Project.find({user_id: _id}, (err, projects) => {
+			Project.find({user_id: _id}, (err, data) => {
 				if(!err){
 					callback({
 						success: true,
-						projects
+						projects:{
+							data
+						}
 					})
 				}else{
 					callback({success: false})
@@ -75,20 +79,22 @@ export default class ProjectAPIController{
 	static update = (formData, callback) => {
 		const _id = pick(formData, "_id");
 		formData = omit(formData, "_id", "_v");
-		Project.updateOne({
-			_id
-		}, formData, (err, data) => {
-			if(!err){
-				callback({
-					success: true,
-					project: data
-				})
-			}else{
-				callback({
-					success: false,
-					errors: data
-				})
-			}
-		})
+		if(_id){
+			Project.updateOne({
+				_id
+			}, formData, (err, data) => {
+				if(!err){
+					callback({
+						success: true,
+						project: data
+					})
+				}else{
+					callback({
+						success: false,
+						errors: data
+					})
+				}
+			})
+		}
 	}
 }
