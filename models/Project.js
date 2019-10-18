@@ -19,6 +19,7 @@ const ProjectSchema = mongoose.Schema({
 	completed: Boolean,
 	assets: String,
 	image: String,
+	photo: String,
 	morals:Array,
 	project: Object,
 	how_hear: Array,
