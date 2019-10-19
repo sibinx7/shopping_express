@@ -4,22 +4,53 @@ import Project, {ProjectCount} from "../models/Project";
 
 export default class ProjectAPIController{
 
-	static  list = (callback) => {
-		Project.find({}, (err, data) => {
-			if(!err){
-				callback({
-					success: true,
-					projects:{
-						data
+	static  list = (query={}, callback) => {
+		let options = {
+			limit: 10
+		};
+		if(Object.keys(query).length){
+			let {	per_page, page } = query;
+			per_page = parseInt(per_page);
+			page = parseInt(page);
+			if(per_page){
+				options["limit"] = per_page;
+			}
+			let skip = 0;
+			if(page){
+				skip = (page - 1) * options.limit;
+			}
+			options["skip"] = skip;
+		}
+		Project.countDocuments({}, (err_p, count) => {
+			if(!err_p){
+				Project.find({}, null,options, (err, data) => {
+					if(!err){ // Code repetition, reduce repetition
+						callback({
+							success: true,
+							projects:{
+								data,
+								meta:{
+									total: count,
+									page: options.skip || 1,
+									per_page: options.limit || 10,
+									count: data.length
+								}
+							}
+						})
+					}else{
+						callback({
+							success: false
+						})
 					}
- 				})
+				});
 			}else{
+				console.log(err_p)
 				callback({
 					success: false
 				})
 			}
-		});
-	}
+		})
+	};
 
 	static  list_by_user = (_id, query, callback) => {
 		if(_id){
@@ -34,18 +65,15 @@ export default class ProjectAPIController{
 				if(per_page){
 					options["limit"] = per_page;
 				}
+				let skip = 0;
 				if(page){
-					let skip = 0;
-					if(page){
-						skip = (page - 1) * options.limit;
-					}
-					options["skip"] = skip;
+					skip = (page - 1) * options.limit;
 				}
+				options["skip"] = skip;
 			}
 
 			Project.countDocuments({user_id: _id}, (err_p, count) => {
-				console.log(JSON.stringify(options))
-				console.log("Current options...")
+
 				if(!err_p){
 					Project.find({user_id: _id},null, options, (err, data) => {
 						if(!err){
@@ -62,7 +90,7 @@ export default class ProjectAPIController{
 								}
 							})
 						}else{
-							callback({success: false})
+							callback({success: false}); // User DRY, this can be in single
 						}
 					})
 				}else{

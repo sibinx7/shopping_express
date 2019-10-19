@@ -120,15 +120,17 @@ router.put("/edit_profile", userEditHandler);
 
 
 const getAllProjectHandler = (req, res, next) => {
-	ProjectAPIController.list(({success, projects}) => {
+	const query = req.query;
+	ProjectAPIController.list(query,({success, projects}) => {
 		if(success){
 			res.json({
-				data: projects,
-				meta:{}
+				success,
+				projects,
 			})
 		}else{
 			res.json({
-				data: []
+				success,
+				projects:{data:[]}
 			})
 		}
 	})
