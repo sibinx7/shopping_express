@@ -217,14 +217,40 @@ router.put("/add_project_step3", projectDataUpdateHandler);
 
 
 
+const projectDeleteHandler = (req, res, next) => {
+	try{
+		const projectID = req.params.id;
+		let userID;
+		if(req.headers && req.headers["x_current_user_id"]){
+			userID = req.headers["x_current_user_id"];
+		}
+		if(projectID){
+			ProjectAPIController.delete({_id: projectID, user_id: userID}, ({success, response, err}) => {
+				res.json({
+					success,
+					response,
+					err
+				})
+			})
+		}
+	}catch (e) {
+		res.json({
+			success: false
+		})
+	}
+}
+
+router.delete("/project/:id", projectDeleteHandler)
+
 const projectByUserHandler = (req, res, next ) => {
 	let user_id = req.headers["x_user_id"];
+	let query = req.query;
 	if(!user_id){
 		user_id = req.query.user_id;
 	}
 	console.log("Current USER with X_USER_ID", user_id)
 	if(user_id){
-		ProjectAPIController.list_by_user(user_id, (result) => {
+		ProjectAPIController.list_by_user(user_id, query, (result) => {
 			res.json(commonUserResponse(result));
 		})
 	}else{

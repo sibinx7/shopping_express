@@ -1,5 +1,5 @@
 import {omit, pick} from "underscore";
-import Project from "../models/Project";
+import Project, {ProjectCount} from "../models/Project";
 
 
 export default class ProjectAPIController{
@@ -21,20 +21,59 @@ export default class ProjectAPIController{
 		});
 	}
 
-	static  list_by_user = (_id, callback) => {
+	static  list_by_user = (_id, query, callback) => {
 		if(_id){
-			Project.find({user_id: _id}, (err, data) => {
-				if(!err){
-					callback({
-						success: true,
-						projects:{
-							data
+			let options = {
+				limit: 10
+			};
+
+			if(Object.keys(query).length){
+				let {	per_page, page } = query;
+				per_page = parseInt(per_page);
+				page = parseInt(page);
+				if(per_page){
+					options["limit"] = per_page;
+				}
+				if(page){
+					let skip = 0;
+					if(page){
+						skip = (page - 1) * options.limit;
+					}
+					options["skip"] = skip;
+				}
+			}
+
+			Project.countDocuments({user_id: _id}, (err_p, count) => {
+				console.log(JSON.stringify(options))
+				console.log("Current options...")
+				if(!err_p){
+					Project.find({user_id: _id},null, options, (err, data) => {
+						if(!err){
+							callback({
+								success: true,
+								projects:{
+									data,
+									meta:{
+										total: count,
+										page: options.skip || 1,
+										per_page: options.limit || 10,
+										count: data.length
+									}
+								}
+							})
+						}else{
+							callback({success: false})
 						}
 					})
 				}else{
-					callback({success: false})
+					console.log(err_p)
+					callback({
+						success: false
+					})
 				}
 			})
+
+
 		}else{
 			callback({
 				success: false
@@ -114,6 +153,31 @@ export default class ProjectAPIController{
 					callback({
 						success: false,
 						errors: data
+					})
+				}
+			})
+		}
+	}
+
+
+	static delete = ({_id, user_id}, callback) => {
+		console.log("Project ID", _id)
+		console.log("User ID", user_id)
+		if(_id){
+			console.log("ID")
+			Project.deleteOne({_id, user_id}, (error, response) => {
+				console.log("After delete")
+				console.log(JSON.stringify(error))
+				console.log(JSON.stringify(response));
+				if(!error){
+					callback({
+						success: true,
+						response
+					})
+				}else{
+					callback({
+						success: false,
+						error
 					})
 				}
 			})
