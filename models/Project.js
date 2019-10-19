@@ -24,7 +24,11 @@ const ProjectSchema = mongoose.Schema({
 	project: Object,
 	how_hear: Array,
 	additional_documents: Array,
-	user_id: String
+	user_id: {
+		type: String,
+		unique: true,
+		required: true
+	}
 });
 
 const Project = mongoose.model('Project', ProjectSchema);

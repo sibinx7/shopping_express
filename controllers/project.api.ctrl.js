@@ -58,21 +58,43 @@ export default class ProjectAPIController{
 	}
 
 	static create = (formData, callback) => {
-		console.log(JSON.stringify(formData))
-		console.log("####")
-		Project.create(formData, (err, project) => {
-			if(!err){
-				callback({
-					success: true,
-					project
-				})
-			}else{
+
+		// Check whether a user already have one Project
+		const user_id = formData["user_id"];
+		Project.countDocuments({user_id}, (errors, count) => {
+			console.log(JSON.stringify(errors))
+			console.log(count)
+			console.log("Count documents....")
+			if(errors){
 				callback({
 					success: false,
-					errors: project
+					errors
 				})
 			}
-		})
+			if(!errors && count){
+				callback({
+					success: false,
+					errors: "User can create only one Project"
+				})
+			}
+
+			if(!errors && !count){
+				Project.create(formData, (err, project) => {
+					if(!err){
+						callback({
+							success: true,
+							project
+						})
+					}else{
+						callback({
+							success: false,
+							errors: err
+						})
+					}
+				})
+			}
+		});
+
 	}
 
 

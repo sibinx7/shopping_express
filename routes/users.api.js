@@ -159,7 +159,17 @@ const projectDataCreateHandler = (req, res, next) => {
 	if(req.headers && req.headers["x_current_user_id"]){
 		formData["user_id"] = req.headers["x_current_user_id"];
 	}
+
+	if(!formData.user_id){
+		res.json({
+			success: false,
+			message: "Project cannot create, only a user can create Project"
+		});
+	}
 	ProjectAPIController.create(formData, ({success, project, errors}) => {
+		console.log(success)
+		console.log(project)
+		console.log(errors)
 		if(success){
 			res.json({
 				success: true,
@@ -168,6 +178,7 @@ const projectDataCreateHandler = (req, res, next) => {
 		}else{
 			res.json({
 				success: false,
+				errors
 			})
 		}
 	})
