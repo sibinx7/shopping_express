@@ -27,6 +27,8 @@ const ProjectSchema = mongoose.Schema({
 	additional_documents: Array,
 	valuation_status:String,
 	validated: Boolean,
+	rejected: Boolean,
+	status: String,
 	admin_shortlisted: Boolean,
 	jury_shortlisted: Boolean,
 	finalist: Boolean,
