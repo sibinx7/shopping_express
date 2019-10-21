@@ -7,6 +7,8 @@ import HelperAPIController from "../controllers/helper.api.ctrl";
 import jwt from "jsonwebtoken";
 
 
+const notification_routes = require("./users.notification.api");
+
 const commonUserResponse = (result) => {
 	const {success, user, projects} = result;
 	let response = {};
@@ -314,5 +316,8 @@ const adminLoginHandler = (req, res, next) => {
 	})
 };
 router.post("/admin_login", adminLoginHandler)
+
+
+router.use("/notifications", notification_routes);
 
 module.exports = router;

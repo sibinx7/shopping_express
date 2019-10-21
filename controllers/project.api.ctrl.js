@@ -31,7 +31,7 @@ export default class ProjectAPIController{
 								data,
 								meta:{
 									total: count,
-									page: options.skip || 1,
+									page: query.page,
 									per_page: options.limit || 10,
 									count: data.length
 								}
@@ -83,7 +83,7 @@ export default class ProjectAPIController{
 									data,
 									meta:{
 										total: count,
-										page: options.skip || 1,
+										page: query.page || 1,
 										per_page: options.limit || 10,
 										count: data.length
 									}
@@ -168,6 +168,22 @@ export default class ProjectAPIController{
 	static update = (formData, callback) => {
 		const _id = pick(formData, "_id");
 		formData = omit(formData, "_id", "_v");
+		let checkProjectCompletion = false;
+		if(formData.title){
+			checkProjectCompletion = true;
+		}
+		if(formData.photo){
+			checkProjectCompletion = true;
+		}
+		if(formData.question2 && formData.question6 && formData.question7){
+			checkProjectCompletion = true;
+		}
+
+		const {	project } = formData;
+		if(project.describe && project.sustainability && project.innovation){
+			checkProjectCompletion = true;
+		}
+
 		if(_id){
 			Project.updateOne({
 				_id
