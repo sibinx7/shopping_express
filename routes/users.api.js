@@ -348,6 +348,58 @@ const subscribeHandler = (req, res, next) => {
 }
 router.post("/subscribe/:email", subscribeHandler);
 
+const forgotPasswordHandler = (req, res, next) => {
+	const formData = req.body;
+	try{
+		if(formData.email){
+			UserAPIController.forgot_password(formData.email,({success, error, message}) => {
+				res.json({
+					success,
+					error,
+					message
+				})
+			})
+		}else{
+			res.json({
+				success: false
+			})
+		}
+	}catch (error) {
+		res.json({
+			success: false,
+			error
+		})
+	}
+}
+
+router.post("/forgot-password/:token", forgotPasswordHandler);
+
+
+const resetPasswordHandler = (req, res, next) => {
+
+	try{
+		const formData = req.body;
+		const token = req.params.token;
+		if(!token){
+			throw new Error("Token is not present")
+		}
+		if(!formData.password && formData.password !== formData.confirm_password){
+			throw new Error("Password and Confirm password are not equal")
+		}
+		UserAPIController.reset_password(formData, token, ({success, message, error}) => {
+			res.json({
+				success, error, message
+			})
+		})
+	}catch (error) {
+		res.json({
+			success: false,
+			error
+		})
+	}
+}
+
+router.post("/reset-password/:token", resetPasswordHandler )
 
 router.use("/notifications", notification_routes);
 

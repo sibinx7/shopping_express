@@ -7,13 +7,19 @@ import UserMail from "../helpers/mails/user.mail";
 
 export default class UserAPIController{
 	static login = (formData, callback) => {
+		console.log(JSON.stringify(formData))
+		console.log(Base64.encode(formData.password))
+		console.log("Above...")
 		User.findOne({
 			email: formData.email ,
-			password: formData.password,
+			password: Base64.encode(formData.password),
 			active: true
 		})
 			.populate("-password")
 			.exec((err, user) => {
+				console.log(JSON.stringify(err))
+				console.log(JSON.stringify(user))
+				console.log("After login...")
 				if(!err){
 					callback({
 						user,
@@ -35,7 +41,8 @@ export default class UserAPIController{
 		if(formData.email && formData.password){
 			const {	day, month, year, first_name, last_name, email } = formData;
 			let {	password } = formData;
-			let {	username } = formData
+			password = Base64.encode(password);
+			let {	username } = formData;
 			let dob = `${year}-${month}-${day}`;
 			dob = new Date(dob);
 			if(!username){
@@ -134,8 +141,8 @@ export default class UserAPIController{
 	static change_password = (formData, callback) => {
 		const {	old_password, new_password, _id } = formData;
 		if(new_password && old_password){
-			User.updateOne({_id, password: old_password}, {
-				password: new_password
+			User.updateOne({_id, password: Base64.encode(old_password)}, {
+				password: Base64.encode(new_password)
 			}, (err, user) => {
 				if(!err){
 					callback({
@@ -173,7 +180,45 @@ export default class UserAPIController{
 		}
 	}
 
+	static forgot_password (email, callback){
+		if(email){
+			User.findOne({email}, (err, user) => {
+				if(!err){
+					const {email, password } = user;
+					const token = Base64.encode(`${email}`)
+					UserMail.forgot_password_mail(email, token, ({success, message, error}) => {
+						callback({success, message, error})
+					})
+				}
+			})
+		}
+	}
 
+	static reset_password (formData, token, callback){
+		const decode_token = Base64.decode(token);
+		const decode_data = decode_token.split("-");
+		try{
+			console.log("Email is", decode_data[0])
+			User.updateOne({
+				email: decode_data[0]
+			}, {password: Base64.encode(formData.password)}, (error, user) => {
+				if(!error){
+					callback({
+						success: true,
+						message: "Password changed successfully"
+					})
+				}else{
+					callback({
+						success: false,
+						error
+					})
+				}
+			})
+		}catch (e) {
+
+		}
+
+	}
 }
 
 

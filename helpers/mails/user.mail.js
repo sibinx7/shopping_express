@@ -43,6 +43,40 @@ class UserMail {
 			console.log("Mail failed to send")
 		})
 	}
+
+	static forgot_password_mail(email, token, callback){
+		console.log(email)
+		console.log("Send to this email")
+		let messageInformation = {
+			"Messages":[
+				{
+					"From": FromMails[0],
+					"To":[{
+						"Email": email
+					}],
+					"Subject": "Reset your Password",
+					"HTMLPart":`
+						<h2>Please reset your password from below link</h2>
+						<p>Reset password <a href="${SETTINGS.CLIENT_DOMAIN}/reset-password/${token}">link</a></p>
+					`
+				}
+			]
+		}
+		const token_email = MailJET.post("send",{version:"v3.1"})
+			.request(messageInformation);
+		token_email.then((response) => {
+			callback({
+				success: true,
+				message: "Forgot password reset mail sent"
+			})
+		}, (error) => {
+			console.log(JSON.stringify(error))
+			callback({
+				success: false,
+				error: "Forgot password mail not sent"
+			})
+		})
+	}
 }
 
 export default UserMail;
