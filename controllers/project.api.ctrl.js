@@ -169,19 +169,23 @@ export default class ProjectAPIController{
 		const _id = pick(formData, "_id");
 		formData = omit(formData, "_id", "_v");
 		let checkProjectCompletion = false;
-		if(formData.title){
-			checkProjectCompletion = true;
-		}
-		if(formData.photo){
-			checkProjectCompletion = true;
-		}
-		if(formData.question2 && formData.question6 && formData.question7){
-			checkProjectCompletion = true;
-		}
+		try{
+			if(formData.title){
+				checkProjectCompletion = true;
+			}
+			if(formData.photo){
+				checkProjectCompletion = true;
+			}
+			if(formData.question2 && formData.question6 && formData.question7){
+				checkProjectCompletion = true;
+			}
 
-		const {	project } = formData;
-		if(project.describe && project.sustainability && project.innovation){
-			checkProjectCompletion = true;
+			const {	project } = formData;
+			if(project.describe && project.sustainability && project.innovation){
+				checkProjectCompletion = true;
+			}
+		}catch (e) {
+
 		}
 
 		if(_id){
