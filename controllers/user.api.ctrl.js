@@ -1,5 +1,7 @@
 import {omit} from "underscore";
 var User  = require("../models/User");
+import {	Base64 } from "js-base64";
+import UserMail from "../helpers/mails/user.mail";
 // import User from "../models/User";
 
 
@@ -7,7 +9,8 @@ export default class UserAPIController{
 	static login = (formData, callback) => {
 		User.findOne({
 			email: formData.email ,
-			password: formData.password
+			password: formData.password,
+			active: true
 		})
 			.populate("-password")
 			.exec((err, user) => {
@@ -30,23 +33,53 @@ export default class UserAPIController{
 		console.log("Form data creation...")
 		console.log(JSON.stringify(formData))
 		if(formData.email && formData.password){
-			const {	day, month, year, password, first_name, last_name, email } = formData;
+			const {	day, month, year, first_name, last_name, email } = formData;
+			let {	password } = formData;
 			let {	username } = formData
 			let dob = `${year}-${month}-${day}`;
-			console.log(dob)
 			dob = new Date(dob);
-			console.log(dob)
-			console.log("Date is above")
 			if(!username){
 				username = email
 			}
-			User.create({
-				username,password, email,
-				first_name, last_name, dob
-			}, (err, user) => {
-				console.log(JSON.stringify(err));
-				console.log("Create data...");
+
+			let userFields = {
+					username,password, email,
+					first_name, last_name, dob,
+				};
+
+			try{
+				const token = Base64.encode(`${username}-${password}`);
+				if(token){
+					userFields["token"] = token;
+				}
+			}catch (e) {
+
+			}
+
+			User.create( userFields, (err, user) => {
+				console.log(JSON.stringify(err))
 				if(!err){
+					console.log("User successfully created...")
+					// Send Email after
+					let toMailObject = {
+						"Email": user.email
+					};
+					if(user.first_name){
+						toMailObject["Name"] = user.first_name;
+						if(user.last_name){
+							toMailObject["Name"] += ` ${user.last_name}`
+						}
+					}
+					let toMail = [toMailObject];
+					try{
+						console.log("Send message")
+						UserMail.send_email_sign_up(toMail, [], user , () => {
+							// callback
+						});
+					}catch (e) {
+						console.log("Mail send error")
+						console.log(JSON.stringify(e))
+					}
 					callback({
 						user,
 						success: true

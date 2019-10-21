@@ -1,3 +1,5 @@
+import Newsletter from "../helpers/mails/notification.mail";
+
 const User  = require("../models/User");
 
 class HelperAPIController {
@@ -18,6 +20,12 @@ class HelperAPIController {
 					success: false
 				})
 			}
+		})
+	}
+
+	static subscribe = (email, callback) => {
+		Newsletter.subscribe(email, ({success, message, error}) => {
+			callback({success})
 		})
 	}
 }

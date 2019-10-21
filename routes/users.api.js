@@ -315,7 +315,38 @@ const adminLoginHandler = (req, res, next) => {
 		success: true
 	})
 };
-router.post("/admin_login", adminLoginHandler)
+router.post("/admin_login", adminLoginHandler);
+
+
+const accountActivationHandler = (req, res, next) => {
+
+}
+router.post("/account-activation", accountActivationHandler);
+
+
+const subscribeHandler = (req, res, next) => {
+	try{
+		const {	email } = req.params;
+		if(email){
+			HelperAPIController.subscribe(email, ({success, message, error}) => {
+				res.json({
+					success,
+					message,
+					error
+				})
+			})
+		}else{
+			throw new Error("Email address not found")
+		}
+
+	}catch (error) {
+		res.json({
+			success: false,
+			error
+		})
+	}
+}
+router.post("/subscribe/:email", subscribeHandler);
 
 
 router.use("/notifications", notification_routes);

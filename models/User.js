@@ -29,7 +29,9 @@ const UserSchema = mongoose.Schema({
 	created_at: Date,	
 	updated_at: Date,
 	admin: Boolean,
-	super_admin: Boolean
+	super_admin: Boolean,
+	token: String,
+	active: Boolean
 });
 
 const User = mongoose.model('User', UserSchema);
