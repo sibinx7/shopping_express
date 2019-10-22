@@ -6,10 +6,14 @@ export default class ProjectAPIController{
 
 	static  list = (query={}, callback) => {
 		let options = {
-			limit: 10
+			limit: 5
 		};
-		if(Object.keys(query).length){
-			let {	per_page, page } = query;
+
+		const filters = omit(query, "per_page", "page");
+		const pagination = pick(query, "per_page", "page");
+
+		if(Object.keys(pagination).length){
+			let {	per_page, page } = pagination;
 			per_page = parseInt(per_page);
 			page = parseInt(page);
 			if(per_page){
@@ -21,25 +25,79 @@ export default class ProjectAPIController{
 			}
 			options["skip"] = skip;
 		}
-		Project.countDocuments({}, (err_p, count) => {
+
+		let filterOptions = {};
+		if(filters){
+			if(filters.search){
+				filterOptions["title"] = {
+					$regex: filters.search
+				}
+			}
+			if(filters.status){
+				switch (filters.status) {
+					case "New":
+						filterOptions["status"] = {
+							$eq: "new"
+						}
+						break;
+					case "validated":
+					case "Validated":
+						filterOptions["validated"] = {
+							$eq: true
+						}
+						break;
+					case "first_evaluation":
+					case "First Evaluation":
+						filterOptions["first_evaluation"] = {
+							$ne: null
+						}
+						break;
+					case "second_evaluation":
+					case "Second Evaluation":
+						filterOptions["second_evaluation"] = {
+							$ne: null
+						}
+						break;
+					case "rejected":
+					case "Rejected":
+						filterOptions["rejected"] = {
+							$eq: true
+						};
+						break;
+					default:
+						break;
+				}
+			}
+		}
+
+		console.log(filterOptions)
+		Project.countDocuments(filterOptions, (err_p, count) => {
 			if(!err_p){
-				Project.find({}, null,options, (err, data) => {
+				console.log(err_p)
+				Project.find(filterOptions, null , options, (err, data) => {
+					console.log(err)
 					if(!err){ // Code repetition, reduce repetition
 						callback({
 							success: true,
 							projects:{
 								data,
 								meta:{
-									total: count,
-									page: query.page,
+									total: count || 0,
+									page: query.page || 1,
 									per_page: options.limit || 10,
-									count: data.length
+									count: data.length || 0
 								}
 							}
 						})
 					}else{
 						callback({
-							success: false
+							success: false,
+							projects:{
+								data:[],
+								meta:{
+									total: 0, page:1, per_page: options.limit, count:0
+								}
+							}
 						})
 					}
 				});
