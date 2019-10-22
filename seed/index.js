@@ -81,3 +81,46 @@ User.countDocuments({email: "admin@admin.com"}, (err, count) => {
 		});
 	}
 });
+
+
+// Creating for Original Users
+
+User.countDocuments({
+	email:"sulbah@qf.org.qa"
+}, (err, count) => {
+	if(!err  && !count){
+		User.create({
+			username:"sulbah@qf.org.qa",
+			email:"sulbah@qf.org.qa",
+			password: Base64.encode("sqf@akhlaquna"),
+			active: true,
+			gender:"Male",
+			first_name:"Sulbah",
+			admin: true,
+			roles:["admin"],
+			created_at: (new Date()),
+			updated_at: (new Date()),
+			last_active: (new Date())
+		})
+	}
+});
+
+User.countDocuments({
+	email:"qfdigital@qf.org.qa"
+}, (err, count) => {
+	if(!err  && !count){
+		User.create({
+			username:"qfdigital@qf.org.qa",
+			email:"qfdigital@qf.org.qa",
+			password: Base64.encode("akadmin19"),
+			active: true,
+			gender:"Male",
+			first_name:"Super",
+			admin: true,
+			roles:["super-admin"],
+			created_at: (new Date()),
+			updated_at: (new Date()),
+			last_active: (new Date())
+		})
+	}
+});
