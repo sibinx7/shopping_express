@@ -12,8 +12,7 @@ export default class UserAPIController{
 		console.log("Above...")
 		User.findOne({
 			email: formData.email ,
-			password: Base64.encode(formData.password),
-			active: true
+			password: Base64.encode(formData.password)
 		})
 			.populate("-password")
 			.exec((err, user) => {
