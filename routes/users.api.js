@@ -406,7 +406,7 @@ router.post("/reset-password/:token", resetPasswordHandler )
 
 
 const tweetHandler = (req, res, next) => {
-	// try{
+	try{
 		const TWITTER_ID = process.env.TWITTER_ID;
 		const TWITTER_TOKEN = process.env.TWITTER_TOKEN;
 		const requestOptions = {
@@ -420,22 +420,12 @@ const tweetHandler = (req, res, next) => {
 		};
 
 		const requestGet = https.get(requestOptions,(response) => {
-			console.log(response.statusCode)
-			console.log(JSON.stringify(response.headers))
 			let data ="";
 			response.on("data", (result) => {
-				console.log(result)
 				data += result;
 			});
 			response.on("end", () => {
-				console.log(data)
-				console.log(JSON.stringify(data))
-				console.log("Connection end...")
-
 				let tweetData = JSON.parse(data);
-
-
-
 				let tweets = {
 					published_at: tweetData[0].created_at,
 					content:{
@@ -446,7 +436,7 @@ const tweetHandler = (req, res, next) => {
 						ar: tweetData[0].entities.media[0]["media_url"],
 						en: tweetData[1].entities.media[0]["media_url"]
 					}
-				}
+				};
 
 				res.json({
 					success: true,
@@ -455,15 +445,21 @@ const tweetHandler = (req, res, next) => {
 			})
 		});
 
-	// }catch (e) {
-	// 	console.log(">>>>>>>>>>>>>>>>>")
-	// 	console.log("Error occurred")
-	// 	console.log(JSON.stringify(e))
-	// 	res.json({
-	// 		success: false,
-	// 		error:e
-	// 	})
-	// }
+		requestGet.on("error", (error) => {
+			res.json({
+				success: false,
+				error,
+				tweets:{}
+			})
+		})
+
+	}catch (e) {
+		res.json({
+			success: false,
+			error:e,
+			tweets:{}
+		})
+	}
 
 
 
