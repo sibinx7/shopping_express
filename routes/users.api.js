@@ -5,6 +5,9 @@ import UserAPIController from "../controllers/user.api.ctrl";
 import ProjectAPIController from "../controllers/project.api.ctrl";
 import HelperAPIController from "../controllers/helper.api.ctrl";
 import jwt from "jsonwebtoken";
+require("dotenv").config();
+const http = require("http");
+const https = require("https");
 
 
 const notification_routes = require("./users.notification.api");
@@ -400,6 +403,72 @@ const resetPasswordHandler = (req, res, next) => {
 }
 
 router.post("/reset-password/:token", resetPasswordHandler )
+
+
+const tweetHandler = (req, res, next) => {
+	// try{
+		const TWITTER_ID = process.env.TWITTER_ID;
+		const TWITTER_TOKEN = process.env.TWITTER_TOKEN;
+		const requestOptions = {
+			hostname:`api.twitter.com`,
+			path:`/1.1/statuses/user_timeline.json?user_id=${TWITTER_ID}&count=2`,
+			method:"GET",
+			headers:{
+				"Content-Type": "utf-8",
+				Authorization:`Bearer ${TWITTER_TOKEN}`
+			}
+		};
+
+		const requestGet = https.get(requestOptions,(response) => {
+			console.log(response.statusCode)
+			console.log(JSON.stringify(response.headers))
+			let data ="";
+			response.on("data", (result) => {
+				console.log(result)
+				data += result;
+			});
+			response.on("end", () => {
+				console.log(data)
+				console.log(JSON.stringify(data))
+				console.log("Connection end...")
+
+				let tweetData = JSON.parse(data);
+
+
+
+				let tweets = {
+					published_at: tweetData[0].created_at,
+					content:{
+						ar: tweetData[0].text,
+						en: tweetData[1].text
+					},
+					thumbnail:{
+						ar: tweetData[0].entities.media[0]["media_url"],
+						en: tweetData[1].entities.media[0]["media_url"]
+					}
+				}
+
+				res.json({
+					success: true,
+					tweets
+				})
+			})
+		});
+
+	// }catch (e) {
+	// 	console.log(">>>>>>>>>>>>>>>>>")
+	// 	console.log("Error occurred")
+	// 	console.log(JSON.stringify(e))
+	// 	res.json({
+	// 		success: false,
+	// 		error:e
+	// 	})
+	// }
+
+
+
+}
+router.get("/latest-tweets", tweetHandler)
 
 router.use("/notifications", notification_routes);
 
