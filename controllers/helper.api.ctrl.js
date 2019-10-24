@@ -34,7 +34,7 @@ class HelperAPIController {
 
 	static check_email = (callback) => {
 
-		getEmailTemplate("register", null, (data) => {
+		getEmailTemplate("notification_mail", null, (data) => {
 			data = data.replace("{{akhlaquna_activation_link}}", "<SOME_LINK>");
 			callback(data)
 		});
