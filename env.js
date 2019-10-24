@@ -6,6 +6,7 @@ const SETTINGS = {
 	CLIENT_DOMAIN_TERMS: process.env.CLIENT_DOMAIN_TERMS || "https://dev.akhlaquna.qa/terms",
 	CLIENT_DOMAIN_ABOUT: process.env.CLIENT_DOMAIN_ABOUT || "https://dev.akhlaquna.qa/about",
 	AKHLAQUNA_AWARD_OPEN: process.env.AKHLAQUNA_AWARD_OPEN || "25th October 2019",
+	AKHLAQUNA_AWARD_END: process.env.AKHLAQUNA_AWARD_END,
 	AKHLAQUNA_FACEBOOK_LINK: process.env.AKHLAQUNA_FACEBOOK_LINK || "https://www.facebook.com/akhlaqunaqa/",
 	AKHLAQUNA_TWITTER_LINK: process.env.AKHLAQUNA_TWITTER_LINK || "https://twitter.com/akhlaqunaqa",
 	AKHLAQUNA_INSTAGRAM_LINK: process.env.AKHLAQUNA_INSTAGRAM_LINK || "https://www.instagram.com/akhlaquna/"

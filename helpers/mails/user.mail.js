@@ -12,13 +12,12 @@ let FromMails = [
 
 class UserMail {
 
-	static send_email_sign_up(toMails, fromMails=[], user={},  callback){
+	static send_email_sign_up(toMails, fromMails=[], user={}, language,  callback){
 		console.log(JSON.stringify(user))
 		console.log("User information...")
 		if(fromMails.length){
 			FromMails = [...FromMails, fromMails];
 		}
-		const language ="";
 		getEmailTemplate("register_activation", language, (html_content) => {
 			/**
 			 *
@@ -29,7 +28,11 @@ class UserMail {
 			 * @type {{Messages: {HTMLPart: *, TextPart: string, From: *, To: *, Subject: string}[]}}
 			 */
 
-			html_content = html_content.replace("{{akhlaquna_activation_link}}", `${SETTINGS.CLIENT_DOMAIN}/activate/${user.token}`);
+
+			html_content = html_content.replace("{{akhlaquna_activation_link}}", `${SETTINGS.CLIENT_DOMAIN}/account-activation/${user.token}`);
+			html_content = html_content.replace("{{akhlaquna_about_url}}", `${SETTINGS.CLIENT_DOMAIN_ABOUT}`);
+			html_content = html_content.replace("{{akhlaquna_submit_project}}", `${SETTINGS.CLIENT_DOMAIN}/sign-in`);
+			html_content = html_content.replace("{{akhlaquna_terms_url}}", `${SETTINGS.CLIENT_DOMAIN_TERMS}`);
 			let messageInformation = {
 				"Messages":[
 					{
@@ -98,9 +101,43 @@ class UserMail {
 				})
 			})
 		})
-
 	}
 
+	static activate_account(user, language="", callback){
+
+		let toMail = [
+			{
+				"Email": user.email,
+				"Name": `${user.first_name} ${user.last_name}`
+			}
+		]
+
+		getEmailTemplate("register", language, (content_html) => {
+			content_html = content_html.replace("{{akhlaquna_award_end}}", SETTINGS.AKHLAQUNA_AWARD_END);
+			content_html = content_html.replace("{{akhlaquna_add_project}}", `${SETTINGS.CLIENT_DOMAIN}/sign-in`);
+			content_html = content_html.replace("{{akhlaquna_submit_project}}", `${SETTINGS.CLIENT_DOMAIN}/sign-in`);
+			content_html = content_html.replace("{{akhlaquna_about_url}}", `${SETTINGS.CLIENT_DOMAIN_ABOUT}`);
+			content_html = content_html.replace("{{akhlaquna_terms_url}}", `${SETTINGS.CLIENT_DOMAIN_TERMS}`);
+			let messageInformation = {
+				"Messages":[
+					{
+						"From": FromMails[0],
+						"To":toMail,
+						"Subject": "Thanks for signing up",
+						"HTMLPart": content_html
+					}
+				]
+			};
+			const success_activation = MailJET.post("send", {version:"v3.1"})
+				.request(messageInformation);
+
+			success_activation.then((result) => {
+				console.log("USER_REGISTER:Message send successfully")
+			}, (error) => {
+				console.log("USER_REGISTER:Message failed to send")
+			})
+		})
+	}
 
 }
 

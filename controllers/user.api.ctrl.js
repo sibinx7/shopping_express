@@ -36,7 +36,7 @@ export default class UserAPIController{
 
 	static create = (formData, callback) => {
 		if(formData.email && formData.password){
-			const {	day, month, year, first_name, last_name, email } = formData;
+			const {	day, month, year, first_name, last_name, email, language, roles, admin, super_admin, jury } = formData;
 			let {	password } = formData;
 			password = Base64.encode(password);
 			let {	username } = formData;
@@ -58,6 +58,12 @@ export default class UserAPIController{
 				}
 			}catch (e) {
 
+			}
+
+			if(!roles){
+				if(!super_admin || !admin || !jury){
+					userFields["roles"] = ["user"];
+				}
 			}
 
 			User.countDocuments({email}, (error, count) => {
@@ -82,7 +88,7 @@ export default class UserAPIController{
 								let toMail = [toMailObject];
 								try{
 									console.log("Send message")
-									UserMail.send_email_sign_up(toMail, [], user , () => {
+									UserMail.send_email_sign_up(toMail, [], user, language , () => {
 										// callback
 									});
 								}catch (e) {
@@ -233,9 +239,44 @@ export default class UserAPIController{
 				}
 			})
 		}catch (e) {
+			// error block
+		}
+	}
+
+	static activate_account = ({token, language}, callback) => {
+		try{
+			User.findOne({token}, (err, user) => {
+				if(!err){
+					if(user){
+						User.updateOne({email: user.email}, {
+							active: true,
+							updated_at: (new Date()),
+							last_active: (new Date())
+						}, (error, updated ) => {
+							if(!error){
+
+								// Send another email
+								UserMail.activate_account(user,language);
+
+								callback({
+									success: true,
+									user
+								})
+							}else{
+								callback({success: false, error})
+							}
+						})
+					}else{
+						callback({
+							success: false,
+							error: err
+						})
+					}
+				}
+			})
+		}catch (e) {
 
 		}
-
 	}
 }
 

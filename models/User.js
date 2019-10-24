@@ -34,6 +34,26 @@ const UserSchema = mongoose.Schema({
 	active: Boolean
 });
 
+/**
+ * @description Run before item deleted from database,
+ * this feature can be use to delete other collections related to deleted user
+ */
+UserSchema.pre("remove", function(next){ // `this` is deleted user
+	console.log(this._id);
+	console.log(`Deleted user is '${this.email}'`);
+	next();
+});
+
+/**
+ * @description Run after item deleted from database,
+ * this callback is use to perform any actions ( not database)
+ */
+UserSchema.post("remove", function(next){
+	console.log("Run after user deleted.")
+});
+
+
 const User = mongoose.model('User', UserSchema);
+
 module.exports = User;
 // export default User
