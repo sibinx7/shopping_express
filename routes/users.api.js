@@ -466,7 +466,16 @@ const tweetHandler = (req, res, next) => {
 
 
 }
-router.get("/latest-tweets", tweetHandler)
+router.get("/latest-tweets", tweetHandler);
+
+
+const emailTemplateHandler = (req, res, next) => {
+	HelperAPIController.check_email((result) => {
+		res.send(result)
+	})
+}
+
+router.get("/check-email-template", emailTemplateHandler)
 
 router.use("/notifications", notification_routes);
 

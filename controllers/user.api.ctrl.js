@@ -159,6 +159,8 @@ export default class UserAPIController{
 				password: Base64.encode(new_password)
 			}, (err, user) => {
 				if(!err){
+					// Call Reset password
+
 					callback({
 						success: true,
 						user
@@ -217,6 +219,8 @@ export default class UserAPIController{
 				email: decode_data[0]
 			}, {password: Base64.encode(formData.password)}, (error, user) => {
 				if(!error){
+					// Call reset password email
+
 					callback({
 						success: true,
 						message: "Password changed successfully"
