@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <style>
+
+        .main {
+            width: 80%;
+            height: auto;
+            margin:auto;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        .header {
+            width: 100%;
+            height: auto;
+            float: left;
+            padding-top: 30px;
+        }
+
+        .txt-rgr {
+            text-align: center;
+            font-size: 16px;
+            color: #313363 !important;
+        }
+
+        .mgn {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            color: #313363 !important;
+        }
+
+        .msgs {
+            background: #EAE8E9;
+            color: #313363 !important;
+            padding-left: 3%;
+            padding-bottom: 2%;
+            padding-top: 2%
+        }
+
+         h3 {
+             font-size:19px;
+        }
+
+        .linkclr {
+            color: #45C1CB;
+            text-decoration-line: underline;
+        }
+        
+        .link {
+            color: #EB286F;
+            text-decoration: none;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 10px;
+            font-size: 19px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            text-decoration: none;
+            color: white;
+            background-color: #EB286D !important;
+            border-radius: 16px;
+            margin-left: 40%;
+        
+        }
+        .button-section {
+            width: 100%;
+            height: auto;
+            float: left;
+        }
+
+        .btn-common {
+            border-radius: 0px !important;
+            height: 60px !important;
+            color: #fff !important;
+            font-size: 20px !important;
+        }
+
+            .btn-common:hover {
+                opacity: 0.8;
+            }
+
+       
+        .hd {
+            bottom: 95%;
+            background: linear-gradient(to right, #313563, #1E81BE);
+            color: white;
+            width: 100%;
+            text-align: center;
+            height: 16%;
+            top: 0%;
+        }
+        .hdr {
+            margin-top: 0px;
+            font-size: 32px;
+            padding-top: 36px;
+            font-weight: 700;
+            padding-bottom: 28px;
+        }
+        .tick {
+            top: 8%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            padding-top: 1%;
+            width: 100%;
+        }
+
+        .big {
+            width: 90%
+        }
+
+        .holder {
+            width: 100%;
+            height: 100%;
+            width: 9%;
+        }
+
+            .holder img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+        .footerLink {
+            color: #313363  !important;
+            text-decoration-line: underline;
+        }
+        
+        
+    </style>
+</head>
+<body>
+
+
+    <div class="main">
+        <div class="hd hdr">
+            Thanks for submitting your project.
+        </div>
+        <div class="msgs">
+            <div class="tick holder">
+                <img class="big" src="%s" /> 
+            </div>
+            <div class="messages">
+                <h3>Hi %s,</h3>
+
+                <h3>
+                    <p>Congratulations! We have received your submission successfully.</p>
+                   <!--  <p>Please check your submitted project on the link below:<br/>
+                    <a class="link" href="%s">%s</a>
+                    </p> -->
+                
+                   
+                    <p>If you have any questions, please contact akhlaqunaaward@qf.org.qa</p>
+
+                     <p>
+                    Best regards,
+                    <br />
+                    Akhlaquna Team</p>
+                </h3>
+            </div>
+            <div>
+            <a class="button gr-color" href="%s#/Login">GO TO DASHBOARD</a></div>
+            <br/>
+            <br/>
+        </div>
+        </div>
+        <div>
+         <p class="txt-rgr mgn footer">
+                Please add info@akhlaquna.qa to your address book to make sure our emails are delivered to your  inbox.
+
+                <br /><br /><a class="linkclr" href="%s">Akhlaquna</a> | An initiative by Qatar Foundation
+
+                <br /><br /><a class="footerLink" href="mailto:akhlaqunaaward@qf.org.qa?Subject=Unsubscribe%20Request">Unsubscribe</a> | <a class="footerLink" href="%s">Terms of Use</a>
+            </p>
+
+        </div>
+    </div>
+
+</body>
+</html>
+
+<!-- 
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <style>
+
+        .main {
+            width: 80%;
+            height: auto;
+            margin:auto;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        .header {
+            width: 100%;
+            height: auto;
+            float: left;
+            padding-top: 30px;
+        }
+
+        .txt-rgr {
+            text-align: center;
+            font-size: 16px;
+            color: #313363 !important;
+        }
+
+        .mgn {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            color: #313363 !important;
+        }
+
+        .msgs {
+            background: #EAE8E9;
+            color: #313363 !important;
+            padding-left: 3%;
+            padding-bottom: 2%;
+            padding-top: 2%
+        }
+
+         h3 {
+             font-size:19px;
+        }
+
+        .linkclr {
+            color: #45C1CB;
+            text-decoration-line: underline;
+        }
+        
+        .link {
+            color: #EB286F;
+            text-decoration: none;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 10px;
+            font-size: 19px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            text-decoration: none;
+            color: white;
+            background-color: #EB286D !important;
+            border-radius: 16px;
+            margin-left: 40%;
+        
+        }
+        .button-section {
+            width: 100%;
+            height: auto;
+            float: left;
+        }
+
+        .btn-common {
+            border-radius: 0px !important;
+            height: 60px !important;
+            color: #fff !important;
+            font-size: 20px !important;
+        }
+
+            .btn-common:hover {
+                opacity: 0.8;
+            }
+
+       
+        .hd {
+            bottom: 95%;
+            background: linear-gradient(to right, #313563, #1E81BE);
+            color: white;
+            width: 100%;
+            text-align: center;
+            height: 16%;
+            top: 0%;
+        }
+        .hdr {
+            margin-top: 0px;
+            font-size: 32px;
+            padding-top: 36px;
+            font-weight: 700;
+            padding-bottom: 28px;
+        }
+        .tick {
+            top: 8%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            padding-top: 1%;
+            width: 100%;
+        }
+
+        .big {
+            width: 90%
+        }
+
+        .holder {
+            width: 100%;
+            height: 100%;
+            width: 9%;
+        }
+
+            .holder img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+        .footerLink {
+            color: #313363  !important;
+            text-decoration-line: underline;
+        }
+        
+        
+    </style>
+</head>
+<body>
+
+
+    <div class="main">
+        <div class="hd hdr">
+            Thanks for submitting your project.
+        </div>
+        <div class="msgs">
+            <div class="tick holder">
+                <img class="big" src="%s" /> 
+            </div>
+            <div class="messages">
+                <h3>Hi %s,</h3>
+
+                <h3>
+                    <p>Congratulations! We have received your submission successfully.</p>
+                   <!--  <p>Please check your submitted project on the link below:<br/>
+                    <a class="link" href="%s">%s</a>
+                    </p> 
+                
+                   
+                    <p>If you have any questions, please contact akhlaqunaaward@qf.org.qa</p>
+
+                     <p>
+                    Best regards,
+                    <br />
+                    Akhlaquna Team</p>
+                </h3>
+            </div>
+            <div>
+            <a class="button gr-color" href="%s#/Login">GO TO DASHBOARD</a></div>
+            <br/>
+            <br/>
+        </div>
+        </div>
+        <div>
+         <p class="txt-rgr mgn footer">
+                Please add info@akhlaquna.qa to your address book to make sure our emails are delivered to your  inbox.
+
+                <br /><br /><a class="linkclr" href="%s">Akhlaquna</a> | An initiative by Qatar Foundation
+
+                <br /><br /><a class="footerLink" href="#">Unsubscribe</a> | <a class="footerLink" href="%s">Terms of Use</a>
+            </p>
+
+        </div>
+    </div>
+
+</body>
+</html> -->
+
+
+
+

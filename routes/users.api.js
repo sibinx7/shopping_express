@@ -65,7 +65,7 @@ router.post("/login", (req, res, next) => {
 
 router.post("/register", (req, res, next) => {
 	const formData = req.body;
-	UserAPIController.create(formData, ({user, success}) => {
+	UserAPIController.create(formData, ({user, success, error, key}) => {
 		if(success){
 			res.json({
 				success: true,
@@ -76,6 +76,8 @@ router.post("/register", (req, res, next) => {
 			res.json({
 				success: false,
 				status: 404,
+				error,
+				key
 			})
 		}
 	})

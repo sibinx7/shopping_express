@@ -35,8 +35,6 @@ export default class UserAPIController{
 	};
 
 	static create = (formData, callback) => {
-		console.log("Form data creation...")
-		console.log(JSON.stringify(formData))
 		if(formData.email && formData.password){
 			const {	day, month, year, first_name, last_name, email } = formData;
 			let {	password } = formData;
@@ -62,40 +60,57 @@ export default class UserAPIController{
 
 			}
 
-			User.create( userFields, (err, user) => {
-				console.log(JSON.stringify(err))
-				if(!err){
-					console.log("User successfully created...")
-					// Send Email after
-					let toMailObject = {
-						"Email": user.email
-					};
-					if(user.first_name){
-						toMailObject["Name"] = user.first_name;
-						if(user.last_name){
-							toMailObject["Name"] += ` ${user.last_name}`
-						}
+			User.countDocuments({email}, (error, count) => {
+				if(!error){
+					console.log(count)
+					if(!count){
+						console.log("Email not exists...")
+						User.create( userFields, (err, user) => {
+							console.log(JSON.stringify(err))
+							if(!err){
+								console.log("User successfully created...")
+								// Send Email after
+								let toMailObject = {
+									"Email": user.email
+								};
+								if(user.first_name){
+									toMailObject["Name"] = user.first_name;
+									if(user.last_name){
+										toMailObject["Name"] += ` ${user.last_name}`
+									}
+								}
+								let toMail = [toMailObject];
+								try{
+									console.log("Send message")
+									UserMail.send_email_sign_up(toMail, [], user , () => {
+										// callback
+									});
+								}catch (e) {
+									console.log("Mail send error")
+									console.log(JSON.stringify(e))
+								}
+								callback({
+									user,
+									success: true
+								});
+							}else(
+								callback({
+									success: false
+								})
+							)
+						})
+					}else{
+						console.log("Email exist")
+						callback({
+							success: false,
+							error: `Email address ${email} is already exist`,
+							key: "email"
+						})
 					}
-					let toMail = [toMailObject];
-					try{
-						console.log("Send message")
-						UserMail.send_email_sign_up(toMail, [], user , () => {
-							// callback
-						});
-					}catch (e) {
-						console.log("Mail send error")
-						console.log(JSON.stringify(e))
-					}
-					callback({
-						user,
-						success: true
-					});
-				}else(
-					callback({
-						success: false
-					})
-				)
+				}
 			})
+
+
 		}
 	};
 
