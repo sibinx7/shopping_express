@@ -126,6 +126,32 @@ router.post("/edit_profile", userEditHandler);
 router.put("/edit_profile", userEditHandler);
 
 
+const userActivateAccount = (req, res, next) => {
+	const formData = req.body;
+	try{
+		if(!formData.token){
+			throw new Error("Token not found")
+		}
+		UserAPIController.activate_account(formData, ({success, error, user}) => {
+			res.json({
+				success,
+				error,
+				user
+			})
+		})
+	} catch (error) {
+		res.json({
+			success: false,
+			error
+		})
+	}
+}
+
+router.post("/activate-account", userActivateAccount)
+
+
+
+
 const getAllProjectHandler = (req, res, next) => {
 	const query = req.query;
 	ProjectAPIController.list(query,({success, projects}) => {
@@ -402,13 +428,18 @@ const resetPasswordHandler = (req, res, next) => {
 			error
 		})
 	}
-}
+};
 
 router.post("/reset-password/:token", resetPasswordHandler )
 
 
 const tweetHandler = (req, res, next) => {
 	try{
+		let isTwitterDisabled = process.env.DISABLE_TWITTER_ON_DEV_MODE || false;
+		if(isTwitterDisabled === "true" || isTwitterDisabled === true){
+			console.log("Twitter fetch is disabled in Development mode");
+			throw new Error("Twitter disabled in development mode")
+		}
 		const TWITTER_ID = process.env.TWITTER_ID;
 		const TWITTER_TOKEN = process.env.TWITTER_TOKEN;
 		const requestOptions = {
@@ -420,6 +451,7 @@ const tweetHandler = (req, res, next) => {
 				Authorization:`Bearer ${TWITTER_TOKEN}`
 			}
 		};
+
 
 		const requestGet = https.get(requestOptions,(response) => {
 			let data ="";

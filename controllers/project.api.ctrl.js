@@ -251,10 +251,24 @@ export default class ProjectAPIController{
 				_id
 			}, formData, (err, data) => {
 				if(!err){
-					callback({
-						success: true,
-						project: data
-					})
+					if(formData.hasOwnProperty("submitted") && formData.submitted){
+						if(formData.step === 3){
+							Project.findOne({_id}, (err, projectData) => {
+								if(err){
+									let  projectStatus = checkProjectCompletion(projectData);
+									if(projectData.submitted){
+										// Send project complete mail
+										
+									}
+								}
+								callback({
+									success: true,
+									project: data
+								});
+							})
+						}
+					}
+
 				}else{
 					callback({
 						success: false,
