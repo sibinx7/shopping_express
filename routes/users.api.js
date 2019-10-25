@@ -509,6 +509,27 @@ const emailTemplateHandler = (req, res, next) => {
 
 router.get("/check-email-template", emailTemplateHandler)
 
+
+
+const statusNotificationHandler = (req, res, next) => {
+	let user_id = req.headers["x_user_id"];
+	HelperAPIController.status_notifications(user_id, ({success, error, notifications}) => {
+		res.json({
+			success,
+			error,
+			notifications 
+		})
+	});
+}
+
+
+router.get("/status-notifications", statusNotificationHandler)
+
+
+
 router.use("/notifications", notification_routes);
+
+
+
 
 module.exports = router;
