@@ -106,3 +106,19 @@ export class BaseMail{
 	}
 };
 
+export const setCommonMessageInformation = (toMails,htmlContent, textContent="") => {
+
+			let messageInformation = {
+				"Messages":[
+					{
+						"From": FromMails[0],
+						"To":toMails,
+						"Subject": textContent,
+						"HTMLPart": htmlContent
+					}
+				]
+			}
+
+
+			return messageInformation;
+}	

@@ -1,7 +1,7 @@
 import SETTINGS from "../../env.js";
 
 import MailJET from "../../config/mailjet.config";
-import {getEmailTemplate} from "./template";
+import {getEmailTemplate, setCommonMessageInformation, BaseMail} from "./template";
 
 let FromMails = [
 	{
@@ -140,6 +140,27 @@ class UserMail {
 			})
 		})
 	}
+
+	static nomination_invite(user, language, callback){
+		let toMails = [
+			{
+				"Email": user.email,
+				"Name": `${user.first_name} ${user.last_name}`
+			}
+		];
+		getEmailTemplate("nomination_invite_email", language, (html_content) => {
+			html_content = BaseMail.fill_with_placeholder(html_content);
+			let messageInformation = setCommonMessageInformation(toMails,html_content);
+			const notification_mail = MailJET.post("send",{version:"v3.1"})
+				.request(messageInformation);
+			notification_mail.then((response) => {
+				callback({success: true, message: "Nomination invite mail send"})
+			}, (error) => {
+				callback({success: false, message:"Nomination invite mail failed to send", error})
+			})
+		});
+	}
+
 }
 
 export default UserMail;

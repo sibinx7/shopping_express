@@ -1,5 +1,6 @@
 import {omit, pick} from "underscore";
 import Project, {ProjectCount} from "../models/Project";
+import ProjectMail from '../helpers/mails/project.mail';
 
 
 export default class ProjectAPIController{
@@ -251,23 +252,34 @@ export default class ProjectAPIController{
 				_id
 			}, formData, (err, data) => {
 				if(!err){
-					if(formData.hasOwnProperty("submitted") && formData.submitted){
-						if(formData.step === 3){
-							Project.findOne({_id}, (err, projectData) => {
-								if(err){
-									let  projectStatus = checkProjectCompletion(projectData);
-									if(projectData.submitted){
-										// Send project complete mail
-										
+					if(formData.user_id){
+						User.findOne({_id: formData.user_id}, (userError, userData) => {
+							if(!userError){
+								if(formData.hasOwnProperty("submitted") && formData.submitted){
+									if(formData.step === 3){
+										Project.findOne({_id}, (err, projectData) => {
+											if(err){
+												let  projectStatus = checkProjectCompletion(projectData);
+												if(projectData.submitted){
+													// Send project complete mail
+													const {	language } = formData;
+													ProjectMail.project_submitted(language, user);
+													
+												}
+											}
+											callback({
+												success: true,
+												project: data
+											});
+										})
 									}
 								}
-								callback({
-									success: true,
-									project: data
-								});
-							})
-						}
+							}else{
+								callback({success: false, error: userError})
+							}
+						})
 					}
+
 
 				}else{
 					callback({
