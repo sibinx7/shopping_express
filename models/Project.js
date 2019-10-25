@@ -54,6 +54,16 @@ const ProjectSchema = mongoose.Schema({
 	}
 });
 
+ProjectSchema.post("save", (error, res, next) => {
+	console.log("After project save event");
+	next();
+});
+ProjectSchema.post("update", (error, res, next) => {
+	console.log("After project update event");
+	next();
+});
+
+
 const Project = mongoose.model('Project', ProjectSchema);
 
 export const ProjectCount = async (filter) => {
