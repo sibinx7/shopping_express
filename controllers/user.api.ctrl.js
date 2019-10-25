@@ -12,7 +12,8 @@ export default class UserAPIController{
 		console.log("Above...")
 		User.findOne({
 			email: formData.email ,
-			password: Base64.encode(formData.password)
+			password: Base64.encode(formData.password),
+			active: true
 		})
 			.populate("-password")
 			.exec((err, user) => {
@@ -143,6 +144,7 @@ export default class UserAPIController{
 		formData = omit(formData, "email", "username", "password", "_id", "_v");
 		formData["updated_at"] = new Date();
 		formData["last_active"] = new Date();
+		formData["active"] = true;
 		User.updateOne({_id}, formData, (err, write) => {
 			console.log(JSON.stringify(err))
 			if(!err){
@@ -223,7 +225,10 @@ export default class UserAPIController{
 			console.log("Email is", decode_data[0])
 			User.updateOne({
 				email: decode_data[0]
-			}, {password: Base64.encode(formData.password)}, (error, user) => {
+			}, {
+					active: true,
+					password: Base64.encode(formData.password)
+			}, (error, user) => {
 				if(!error){
 					// Call reset password email
 
