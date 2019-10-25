@@ -9,7 +9,10 @@ export const checkUserComplete = (userData) => {
 	let tempComplete = true;
 	each(requireFields, (item, index) => {
 		if(userData.hasOwnProperty(item) || !userData[item]){
+			console.log(item)
+			console.log(userData.hasOwnProperty(item))
 			tempComplete = false;
+			console.log("***********")
 			return;
 		}
 	});

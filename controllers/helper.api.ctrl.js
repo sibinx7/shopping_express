@@ -52,7 +52,9 @@ class HelperAPIController {
 					Project.findOne({user_id: user._id}, (error, project) => {
 						let notifications = [];
 						const user_completeness = checkUserComplete(user);
-						if(user_completeness || !user_completeness.complete){
+						console.log(user_completeness)
+						console.log("Check for completeness...")
+						if(user_completeness && !user_completeness.complete){
 							notifications.push({
 								 type: "warning",
 								 message:"Your profile is incomplete. Please add the missing information to be able to add a project. ",

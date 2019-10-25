@@ -24,7 +24,7 @@ const UserSchema = mongoose.Schema({
 	mobile_no: String,
 	qid_no: String,
 	photo: String,
-	qid: String,
+	qid: Object,
 	last_active: Date,
 	created_at: Date,	
 	updated_at: Date,
