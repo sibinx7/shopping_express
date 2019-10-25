@@ -35,8 +35,6 @@ router.post("/login", (req, res, next) => {
 		})
 	}
 	UserAPIController.login(formData, (response) => {
-		console.log(JSON.stringify(response))
-		console.log("After process...")
 		if(response.success){
 			try{
 				const token = jwt.sign({
@@ -46,7 +44,8 @@ router.post("/login", (req, res, next) => {
 
 				res.json({
 					user: response.user,
-					token
+					token,
+					success: true
 				})
 			}catch (e) {
 				res.json({
@@ -278,7 +277,7 @@ const projectDeleteHandler = (req, res, next) => {
 router.delete("/project/:id", projectDeleteHandler)
 
 const projectByUserHandler = (req, res, next ) => {
-	let user_id = req.headers["x_user_id"];
+	let user_id = req.headers["x_current_user_id"];
 	let query = req.query;
 	if(!user_id){
 		user_id = req.query.user_id;
@@ -403,7 +402,7 @@ const forgotPasswordHandler = (req, res, next) => {
 	}
 }
 
-router.post("/forgot-password/:token", forgotPasswordHandler);
+router.post("/forgot-password/", forgotPasswordHandler);
 
 
 const resetPasswordHandler = (req, res, next) => {
@@ -512,7 +511,9 @@ router.get("/check-email-template", emailTemplateHandler)
 
 
 const statusNotificationHandler = (req, res, next) => {
-	let user_id = req.headers["x_user_id"];
+	let user_id = req.headers["x_current_user_id"];
+	console.log(user_id)
+	console.log("Current status notifications...")
 	HelperAPIController.status_notifications(user_id, ({success, error, notifications}) => {
 		res.json({
 			success,
