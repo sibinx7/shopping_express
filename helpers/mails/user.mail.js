@@ -18,7 +18,7 @@ class UserMail {
 		if(fromMails.length){
 			FromMails = [...FromMails, fromMails];
 		}
-		const language ="";
+	
 		/* REGISTER ACTIVATION */
 		getEmailTemplate("register_activation", language, (html_content) => {
 			/**
