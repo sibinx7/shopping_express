@@ -19,6 +19,7 @@ class UserMail {
 			FromMails = [...FromMails, fromMails];
 		}
 		const language ="";
+		/* REGISTER ACTIVATION */
 		getEmailTemplate("register_activation", language, (html_content) => {
 			/**
 			 *
@@ -58,8 +59,7 @@ class UserMail {
 	}
 
 	static forgot_password_mail(email, token, callback){
-		console.log(email)
-		console.log("Send to this email")
+		/* RESET PASSWORD */
 		getEmailTemplate("reset_password","", (content_html) => {
 			/**
 			 * `
@@ -100,8 +100,6 @@ class UserMail {
 		})
 
 	}
-
-
 }
 
 export default UserMail;
