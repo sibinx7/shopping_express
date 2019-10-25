@@ -2,7 +2,7 @@ import Newsletter from "../helpers/mails/notification.mail";
 import {getEmailTemplate} from "../helpers/mails/template";
 import Project from "../models/Project";
 import { checkProjectCompleteness } from '../helpers/projects/index';
-const {	submitted, status, complete} = project_completencess; 
+import {checkUserComplete} from "../helpers/user";
 const fs = require("fs");
 const path = require("path");
 
