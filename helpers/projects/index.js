@@ -17,18 +17,13 @@ export const checkProjectCompleteness = (projectData) => {
 	const requiredFields = ["title", "photo", "how_hear", "morals", "website"];
 	let tempCompleted = true;
 	// console.log(projectData)
-	console.log("Project details...")
 	each(requiredFields, (field, index) => {
 		if(typeof projectData[field] === "undefined" && !projectData[field]){
 			tempCompleted = false;
-			console.log(field)
-			console.log(tempCompleted);
-			console.log("Project fields...")
 			return true;
 		}
 	});
-	console.log("Initial missing components")
-	console.log("[1]+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+
 	if(!tempCompleted){
 		return {
 			status,
@@ -46,14 +41,12 @@ export const checkProjectCompleteness = (projectData) => {
 				if(projectData["project"]){
 					const {	project } = projectData;
 					if(typeof project[item] === "undefined" || !project[item]){
-						console.log("Project : project", item)
 						tempCompleted = false;
 						return true;
 					}
 				}
 			})
 		}
-		console.log("[2]++++++++++++++++++++++++++++++++++++++++++++++++++++")
 		if(!tempCompleted){
 			return  {
 				status,
@@ -72,7 +65,6 @@ export const checkProjectCompleteness = (projectData) => {
 				}
 			})
 		}
-		console.log("[3]+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 		if(!tempCompleted){
 			return {
 				status,
@@ -81,15 +73,14 @@ export const checkProjectCompleteness = (projectData) => {
 			}
 		}
 
-		console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 		if(tempCompleted){
-			if(typeof projectData["submitted"] !== "undefined" && projectData.submitted){
+			if(typeof projectData["submitted"] !== "undefined" && !!projectData.submitted){
 				return {
 					submitted: true,
 					completed: true,
 					status: "submitted"
 				}
-			}else if(typeof projectData["submitted"] === "undefined"){
+			}else if(typeof projectData["submitted"] === "undefined" || !!projectData["completed"]){
 				return {
 					submitted: false,
 					completed: true,
