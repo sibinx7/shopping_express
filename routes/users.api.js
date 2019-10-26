@@ -193,7 +193,6 @@ const projectDataCreateHandler = (req, res, next) => {
 	if(req.headers && req.headers["x_current_user_id"]){
 		formData["user_id"] = req.headers["x_current_user_id"];
 	}
-
 	if(!formData.user_id){
 		res.json({
 			success: false,
@@ -226,7 +225,12 @@ const projectDataUpdateHandler = (req, res, next) => {
 	if(req.headers && req.headers["x_current_user_id"]){
 		formData["user_id"] = req.headers["x_current_user_id"];
 	}
-	ProjectAPIController.update(formData, ({success, project, errors}) => {
+	console.log(formData.user_id)
+	console.log("Current USER")
+	ProjectAPIController.update(formData, ({success, project, errors, error}) => {
+		console.log(errors)
+		console.log(error)
+		console.log("Update section...")
 		if(success){
 			res.json({
 				success: true,
@@ -235,7 +239,8 @@ const projectDataUpdateHandler = (req, res, next) => {
 		}else{
 			res.json({
 				success: false,
-				errors
+				errors,
+				error
 			})
 		}
 	});
@@ -288,7 +293,7 @@ const projectByUserHandler = (req, res, next ) => {
 			res.json(commonUserResponse(result));
 		})
 	}else{
-		res.json({success: false})
+		res.json({success: false, error: "User not available"})
 	}
 };
 

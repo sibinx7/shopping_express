@@ -1,6 +1,8 @@
 import {omit, pick} from "underscore";
 import Project, {ProjectCount} from "../models/Project";
+import User from "../models/User";
 import ProjectMail from '../helpers/mails/project.mail';
+import {checkProjectCompleteness} from "../helpers/projects/index"
 
 
 export default class ProjectAPIController{
@@ -149,13 +151,14 @@ export default class ProjectAPIController{
 								}
 							})
 						}else{
-							callback({success: false}); // User DRY, this can be in single
+							callback({success: false, error}); // User DRY, this can be in single
 						}
 					})
 				}else{
 					console.log(err_p)
 					callback({
-						success: false
+						success: false,
+						error: err_p
 					})
 				}
 			})
@@ -227,60 +230,82 @@ export default class ProjectAPIController{
 	static update = (formData, callback) => {
 		const _id = pick(formData, "_id");
 		formData = omit(formData, "_id", "_v");
-		let checkProjectCompletion = false;
-		try{
-			if(formData.title){
-				checkProjectCompletion = true;
-			}
-			if(formData.photo){
-				checkProjectCompletion = true;
-			}
-			if(formData.question2 && formData.question6 && formData.question7){
-				checkProjectCompletion = true;
-			}
-
-			const {	project } = formData;
-			if(project.describe && project.sustainability && project.innovation){
-				checkProjectCompletion = true;
-			}
-		}catch (e) {
-
+		console.log(_id)
+		console.log("Project ID")
+		const statusBeforeSave = checkProjectCompleteness(formData);
+		if(statusBeforeSave.completed){
+			formData["completed"] = true;
+			formData["status"] = "completed";
 		}
-
+		if(formData["step"] === 3){
+			formData["submitted"] = true;
+		}
 		if(_id){
 			Project.updateOne({
 				_id
 			}, formData, (err, data) => {
+				console.log("Project update method")
+				console.log(err)
 				if(!err){
 					if(formData.user_id){
 						User.findOne({_id: formData.user_id}, (userError, userData) => {
+							console.log("User got")
+							console.log(formData.user_id)
 							if(!userError){
+								console.log("Checking form iss")
 								if(formData.hasOwnProperty("submitted") && formData.submitted){
+									console.log("Form is submitted....")
 									if(formData.step === 3){
-										Project.findOne({_id}, (err, projectData) => {
-											if(err){
-												let  projectStatus = checkProjectCompletion(projectData);
-												if(projectData.submitted){
-													// Send project complete mail
-													const {	language } = formData;
-													ProjectMail.project_submitted(language, user);
-													
+										try{
+											Project.findOne({_id}, (errorProject, projectData) => {
+												try{
+													if(!errorProject){
+														let  projectStatus = checkProjectCompleteness(projectData);
+														if(projectStatus.submitted){
+															// Send project complete mail
+															const {	language } = formData;
+															ProjectMail.project_submitted(language, userData);
+														}
+													}
+													callback({
+														success: true,
+														project: projectData
+													});
+												}catch (e) {
+													callback({
+														success: false,
+														error: e
+													})
 												}
-											}
+											})
+										}catch (e) {
+											console.log(e)
+											console.log("Handle error")
 											callback({
-												success: true,
-												project: data
-											});
+												success: false,
+												error: e
+											})
+										}
+									}else{
+										callback({
+											success: true,
+											project: data
 										})
 									}
+								}else{
+									console.log("It is not step 3....")
+									callback({
+										success: true,
+										project: data
+									})
 								}
 							}else{
+								console.log("Project user fetch error")
+								console.log(userError)
 								callback({success: false, error: userError})
 							}
 						})
 					}
-
-
 				}else{
 					callback({
 						success: false,

@@ -76,19 +76,24 @@ class ProjectMail{
 				"Name": `${user.first_name} ${user.last_name}`
 			}
 		]
-		getEmailTemplate("project_submitted", language, (html_content) => {
-			html_content = BaseMail.fill_with_placeholder(html_content);
-			let text_content = "";
-			let messageInformation = setCommonMessageInformation(toMails, html_content, text_content);
-			const project_submitted = MailJET.post("send", {version:"v3.1"})
+		try{
+			getEmailTemplate("project_submitted", language, (html_content) => {
+				html_content = BaseMail.fill_with_placeholder(html_content);
+				let text_content = "";
+				let messageInformation = setCommonMessageInformation(toMails, html_content, text_content);
+				const project_submitted = MailJET.post("send", {version:"v3.1"})
 				request(messageInformation)
-			project_submitted.then((response) => {
-				callback({success: true, message: "Project submitted message send"})
-			}, (error) => {
-				callback({success: false, message: "Project submitted message failed", error})
-			})
+				project_submitted.then((response) => {
+					callback({success: true, message: "Project submitted message send"})
+				}, (error) => {
+					callback({success: false, message: "Project submitted message failed", error})
+				})
 
-		})		
+			})
+		}	catch (e) {
+			console.log("Project mail error")
+			console.log(e)
+		}
 	}	
 
 

@@ -12,15 +12,23 @@ import {	each	} from "underscore";
  */
 
 export const checkProjectCompleteness = (projectData) => {
+	console.log("++++++++++++++++++++++++++++++++++++++++++")
 	let status = "incomplete";
 	const requiredFields = ["title", "photo", "how_hear", "morals", "website"];
 	let tempCompleted = true;
+	// console.log(projectData)
+	console.log("Project details...")
 	each(requiredFields, (field, index) => {
-		if(!projectData.hasOwnProperty(field) && !projectData[field]){
+		if(typeof projectData[field] === "undefined" && !projectData[field]){
 			tempCompleted = false;
-			return;
+			console.log(field)
+			console.log(tempCompleted);
+			console.log("Project fields...")
+			return true;
 		}
-	})
+	});
+	console.log("Initial missing components")
+	console.log("[1]+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 	if(!tempCompleted){
 		return {
 			status,
@@ -32,19 +40,20 @@ export const checkProjectCompleteness = (projectData) => {
 		if(projectData.hasOwnProperty("project")){
 			const requiredProjectFields = ["describe", "innovation", "sustainability"];
 			each(requiredProjectFields, (item, index) => {
-				if(!projectData.hasOwnProperty("project")){
+				if(!projectData["project"]){
 					tempCompleted = false;
 				}
-				if(projectData.hasOwnProperty("project")){
+				if(projectData["project"]){
 					const {	project } = projectData;
-					if(!project.hasOwnProperty(item) || !project[item]){
+					if(typeof project[item] === "undefined" || !project[item]){
+						console.log("Project : project", item)
 						tempCompleted = false;
-						return;
+						return true;
 					}
 				}
 			})
 		}
-
+		console.log("[2]++++++++++++++++++++++++++++++++++++++++++++++++++++")
 		if(!tempCompleted){
 			return  {
 				status,
@@ -53,16 +62,17 @@ export const checkProjectCompleteness = (projectData) => {
 			}
 		}
 
-		if(tempCompleted && projectData.hasOwnProperty("project")){
+		if(tempCompleted && typeof projectData["project"] === "undefined"){
 			const requiredFields = ["question1", "question2", "question6", "question7", "question8"];
 			each(requiredFields, (item, index) => {
-				if(!projectData.hasOwnProperty(item) || !projectData[item]){
+				if(typeof projectData[item] === "undefined" || !projectData[item]){
+					console.log("Question ", item)
 					tempCompleted = false;
-					return
+					return true
 				}
 			})
 		}
-
+		console.log("[3]+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 		if(!tempCompleted){
 			return {
 				status,
@@ -71,14 +81,15 @@ export const checkProjectCompleteness = (projectData) => {
 			}
 		}
 
+		console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 		if(tempCompleted){
-			if(projectData.hasOwnProperty("submitted") && projectData.submitted){
+			if(typeof projectData["submitted"] !== "undefined" && projectData.submitted){
 				return {
 					submitted: true,
 					completed: true,
 					status: "submitted"
 				}
-			}else{
+			}else if(typeof projectData["submitted"] === "undefined"){
 				return {
 					submitted: false,
 					completed: true,
