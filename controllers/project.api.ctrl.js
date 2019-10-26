@@ -233,7 +233,7 @@ export default class ProjectAPIController{
 		console.log(_id)
 		console.log("Project ID")
 		const statusBeforeSave = checkProjectCompleteness(formData);
-		if(statusBeforeSave.completed){
+		if(statusBeforeSave && statusBeforeSave.completed){
 			formData["completed"] = true;
 			formData["status"] = "completed";
 		}
@@ -264,7 +264,9 @@ export default class ProjectAPIController{
 														if(projectStatus.submitted){
 															// Send project complete mail
 															const {	language } = formData;
-															ProjectMail.project_submitted(language, userData);
+															ProjectMail.project_submitted(language, userData, (sub_mail_response) => {
+																const {	success, message } = sub_mail_response;
+															});
 														}
 													}
 													callback({
