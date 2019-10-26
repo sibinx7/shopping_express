@@ -348,7 +348,7 @@ const VerifyHeaderToken = (req, res, next) => {
 				}
 			})
 		}else{
-			res.status(404).end("Unauthorized access")
+			res.status(401).end("Unauthorized access")
 		}
 
 	}catch (e) {
