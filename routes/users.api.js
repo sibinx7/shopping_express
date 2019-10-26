@@ -1,5 +1,7 @@
 var express = require('express');
+const app = express();
 var router = express.Router();
+import User from "../models/User";
 // var UserAPIController = require("../controllers/user.api.ctrl");
 import UserAPIController from "../controllers/user.api.ctrl";
 import ProjectAPIController from "../controllers/project.api.ctrl";
@@ -8,6 +10,7 @@ import jwt from "jsonwebtoken";
 require("dotenv").config();
 const http = require("http");
 const https = require("https");
+const basic_auth = require("basic-auth");
 
 
 const notification_routes = require("./users.notification.api");
@@ -27,6 +30,7 @@ const commonUserResponse = (result) => {
 	return response;
 };
 
+/* Without any Token verification */
 router.post("/login", (req, res, next) => {
 	const formData = req.body;
 	if(!formData){
@@ -37,11 +41,18 @@ router.post("/login", (req, res, next) => {
 	UserAPIController.login(formData, (response) => {
 		if(response.success){
 			try{
-				const token = jwt.sign({
-					username: response.user.username,
-					password: response.user.password
-				}, "777");
+				console.log(response)
+				console.log("Is it user response...")
+				const {	user } = response;
+				let token ="";
+				// Token base, bearer
+				// token = jwt.sign({
+				// 	username: user.email,
+				// 	password: user.password
+				// }, "777");
 
+
+				token = Base64.btoa(`${formData.email}:${formData.password}`);
 				res.json({
 					user: response.user,
 					token,
@@ -83,7 +94,274 @@ router.post("/register", (req, res, next) => {
 
 });
 
+const userActivateAccount = (req, res, next) => {
+	const formData = req.body;
+	try{
+		if(!formData.token){
+			throw new Error("Token not found")
+		}
+		UserAPIController.activate_account(formData, ({success, error, user}) => {
+			let token = "";
+			// token = jwt.sign({
+			// 	username: user.email,
+			// 	password: user.password
+			// }, '777');
 
+			token = Base64.btoa(`${user.email}:${user.password}`);
+
+			res.json({
+				success,
+				error,
+				user,
+				token
+			})
+		})
+	} catch (error) {
+		res.json({
+			success: false,
+			error
+		})
+	}
+}
+
+router.post("/activate-account", userActivateAccount)
+router.post("/change_password", (req, res, next) => {
+	const formData = req.body;
+	UserAPIController.change_password(formData, (result) => {
+		const response = commonUserResponse(result);
+		res.json(response);
+	})
+});
+const  emailExistenceHandler = (req, res, next) => {
+	const formData = req.body;
+	try{
+		let email = formData.email;
+		if(!email){
+			email = req.params.email;
+		}
+		HelperAPIController.email_availability(email, ({success, count}) => {
+			if(success){
+				res.json({
+					success,
+					count
+				})
+			}else{
+				res.json({
+					success
+				})
+			}
+		})
+	}catch (e) {
+	}
+}
+router.get("/email_availability/:email?", emailExistenceHandler);
+router.post("/email_availability/:email?", emailExistenceHandler);
+
+
+
+const adminLoginHandler = (req, res, next) => {
+	res.json({
+		success: true
+	})
+};
+router.post("/admin_login", adminLoginHandler);
+
+
+const accountActivationHandler = (req, res, next) => {
+
+};
+router.post("/account-activation", accountActivationHandler);
+
+
+const subscribeHandler = (req, res, next) => {
+	try{
+		const {	email } = req.params;
+		if(email){
+			HelperAPIController.subscribe(email, ({success, message, error}) => {
+				res.json({
+					success,
+					message,
+					error
+				})
+			})
+		}else{
+			throw new Error("Email address not found")
+		}
+
+	}catch (error) {
+		res.json({
+			success: false,
+			error
+		})
+	}
+};
+router.post("/subscribe/:email", subscribeHandler);
+
+const forgotPasswordHandler = (req, res, next) => {
+	const formData = req.body;
+	try{
+		if(formData.email){
+			UserAPIController.forgot_password(formData.email,({success, error, message}) => {
+				res.json({
+					success,
+					error,
+					message
+				})
+			})
+		}else{
+			res.json({
+				success: false
+			})
+		}
+	}catch (error) {
+		res.json({
+			success: false,
+			error
+		})
+	}
+};
+
+router.post("/forgot-password/", forgotPasswordHandler);
+
+const resetPasswordHandler = (req, res, next) => {
+
+	try{
+		const formData = req.body;
+		const token = req.params.token;
+		if(!token){
+			throw new Error("Token is not present")
+		}
+		if(!formData.password && formData.password !== formData.confirm_password){
+			throw new Error("Password and Confirm password are not equal")
+		}
+		UserAPIController.reset_password(formData, token, ({success, message, error}) => {
+			res.json({
+				success, error, message
+			})
+		})
+	}catch (error) {
+		res.json({
+			success: false,
+			error
+		})
+	}
+};
+router.post("/reset-password/:token", resetPasswordHandler );
+
+
+const tweetHandler = (req, res, next) => {
+	try{
+		let isTwitterDisabled = process.env.DISABLE_TWITTER_ON_DEV_MODE || false;
+		if(isTwitterDisabled === "true" || isTwitterDisabled === true){
+			console.log("Twitter fetch is disabled in Development mode");
+			throw new Error("Twitter disabled in development mode")
+		}
+		const TWITTER_ID = process.env.TWITTER_ID;
+		const TWITTER_TOKEN = process.env.TWITTER_TOKEN;
+		const requestOptions = {
+			hostname:`api.twitter.com`,
+			path:`/1.1/statuses/user_timeline.json?user_id=${TWITTER_ID}&count=2`,
+			method:"GET",
+			headers:{
+				"Content-Type": "utf-8",
+				Authorization:`Bearer ${TWITTER_TOKEN}`
+			}
+		};
+		const requestGet = https.get(requestOptions,(response) => {
+			let data ="";
+			response.on("data", (result) => {
+				data += result;
+			});
+			response.on("end", () => {
+				let tweetData = JSON.parse(data);
+				let tweets = {
+					published_at: tweetData[0].created_at,
+					content:{
+						ar: tweetData[0].text,
+						en: tweetData[1].text
+					},
+					thumbnail:{
+						ar: tweetData[0].entities.media[0]["media_url"],
+						en: tweetData[1].entities.media[0]["media_url"]
+					}
+				};
+				res.json({
+					success: true,
+					tweets
+				})
+			})
+		});
+		requestGet.on("error", (error) => {
+			res.json({
+				success: false,
+				error,
+				tweets:{}
+			})
+		})
+
+	}catch (e) {
+		res.json({
+			success: false,
+			error:e,
+			tweets:{}
+		})
+	}
+};
+
+router.get("/latest-tweets", tweetHandler);
+
+const emailTemplateHandler = (req, res, next) => {
+	HelperAPIController.check_email((result) => {
+		res.send(result)
+	})
+};
+router.get("/check-email-template", emailTemplateHandler);
+/* end Without Token Validation */
+
+
+
+
+
+
+const VerifyHeaderToken = (req, res, next) => {
+	try{
+		const headers = req.headers;
+		const authorization = headers["authorization"];
+		const current_user_id = headers["x_current_user_id"];
+		const auth_decode = basic_auth(req);
+
+		if(auth_decode && auth_decode.name && auth_decode.pass){
+			let formData = {
+				email: auth_decode.name,
+				password: Base64.encode(auth_decode.pass)
+			};
+			console.log("Auth decode and form...")
+			console.log(auth_decode)
+			console.log(formData)
+			User.findOne(formData, (err, user) => {
+				console.log(JSON.stringify(err))
+				console.log("Inside user information...")
+				if(!err){
+					next();
+				}else{
+					res.status(401).end("Unauthorized access")
+				}
+			})
+		}else{
+			res.status(404).end("Unauthorized access")
+		}
+
+	}catch (e) {
+		console.log(e);
+		console.log("Some errors try catch...")
+		res.status(401).end("Unauthorised access")
+	}
+};
+
+router.use(VerifyHeaderToken);
+
+
+/* With Token Validation */
 const userShowRouteHandler = (req, res, next) => {
 	const _id = req.params.id;
 	UserAPIController.get(_id, ({success, user}) => {
@@ -100,7 +378,7 @@ const userShowRouteHandler = (req, res, next) => {
 	})
 };
 
-router.get("/user/:id", userShowRouteHandler);
+router.get("/user/:id",  userShowRouteHandler);
 
 router.get("/edit_profile", userShowRouteHandler);
 
@@ -125,28 +403,7 @@ router.post("/edit_profile", userEditHandler);
 router.put("/edit_profile", userEditHandler);
 
 
-const userActivateAccount = (req, res, next) => {
-	const formData = req.body;
-	try{
-		if(!formData.token){
-			throw new Error("Token not found")
-		}
-		UserAPIController.activate_account(formData, ({success, error, user}) => {
-			res.json({
-				success,
-				error,
-				user
-			})
-		})
-	} catch (error) {
-		res.json({
-			success: false,
-			error
-		})
-	}
-}
 
-router.post("/activate-account", userActivateAccount)
 
 
 
@@ -300,13 +557,7 @@ const projectByUserHandler = (req, res, next ) => {
 router.get("/get_projects_by_user", projectByUserHandler)
 
 
-router.post("/change_password", (req, res, next) => {
-	const formData = req.body;
-	UserAPIController.change_password(formData, (result) => {
-		const response = commonUserResponse(result);
-		res.json(response);
-	})
-});
+
 
 const editSettingsHandler = (req, res, next) => {
 	const formData = req.body;
@@ -317,201 +568,6 @@ const editSettingsHandler = (req, res, next) => {
 router.post("/edit_settings", editSettingsHandler);
 
 
-
-const  emailExistenceHandler = (req, res, next) => {
-	const formData = req.body;
-	try{
-		let email = formData.email;
-		if(!email){
-			email = req.params.email;
-		}
-		HelperAPIController.email_availability(email, ({success, count}) => {
-			if(success){
-				res.json({
-					success,
-					count
-				})
-			}else{
-				res.json({
-					success
-				})
-			}
-		})
-	}catch (e) {
-	}
-}
-router.get("/email_availability/:email?", emailExistenceHandler);
-router.post("/email_availability/:email?", emailExistenceHandler);
-
-
-
-const adminLoginHandler = (req, res, next) => {
-	res.json({
-		success: true
-	})
-};
-router.post("/admin_login", adminLoginHandler);
-
-
-const accountActivationHandler = (req, res, next) => {
-
-}
-router.post("/account-activation", accountActivationHandler);
-
-
-const subscribeHandler = (req, res, next) => {
-	try{
-		const {	email } = req.params;
-		if(email){
-			HelperAPIController.subscribe(email, ({success, message, error}) => {
-				res.json({
-					success,
-					message,
-					error
-				})
-			})
-		}else{
-			throw new Error("Email address not found")
-		}
-
-	}catch (error) {
-		res.json({
-			success: false,
-			error
-		})
-	}
-}
-router.post("/subscribe/:email", subscribeHandler);
-
-const forgotPasswordHandler = (req, res, next) => {
-	const formData = req.body;
-	try{
-		if(formData.email){
-			UserAPIController.forgot_password(formData.email,({success, error, message}) => {
-				res.json({
-					success,
-					error,
-					message
-				})
-			})
-		}else{
-			res.json({
-				success: false
-			})
-		}
-	}catch (error) {
-		res.json({
-			success: false,
-			error
-		})
-	}
-}
-
-router.post("/forgot-password/", forgotPasswordHandler);
-
-
-const resetPasswordHandler = (req, res, next) => {
-
-	try{
-		const formData = req.body;
-		const token = req.params.token;
-		if(!token){
-			throw new Error("Token is not present")
-		}
-		if(!formData.password && formData.password !== formData.confirm_password){
-			throw new Error("Password and Confirm password are not equal")
-		}
-		UserAPIController.reset_password(formData, token, ({success, message, error}) => {
-			res.json({
-				success, error, message
-			})
-		})
-	}catch (error) {
-		res.json({
-			success: false,
-			error
-		})
-	}
-};
-
-router.post("/reset-password/:token", resetPasswordHandler )
-
-
-const tweetHandler = (req, res, next) => {
-	try{
-		let isTwitterDisabled = process.env.DISABLE_TWITTER_ON_DEV_MODE || false;
-		if(isTwitterDisabled === "true" || isTwitterDisabled === true){
-			console.log("Twitter fetch is disabled in Development mode");
-			throw new Error("Twitter disabled in development mode")
-		}
-		const TWITTER_ID = process.env.TWITTER_ID;
-		const TWITTER_TOKEN = process.env.TWITTER_TOKEN;
-		const requestOptions = {
-			hostname:`api.twitter.com`,
-			path:`/1.1/statuses/user_timeline.json?user_id=${TWITTER_ID}&count=2`,
-			method:"GET",
-			headers:{
-				"Content-Type": "utf-8",
-				Authorization:`Bearer ${TWITTER_TOKEN}`
-			}
-		};
-
-
-		const requestGet = https.get(requestOptions,(response) => {
-			let data ="";
-			response.on("data", (result) => {
-				data += result;
-			});
-			response.on("end", () => {
-				let tweetData = JSON.parse(data);
-				let tweets = {
-					published_at: tweetData[0].created_at,
-					content:{
-						ar: tweetData[0].text,
-						en: tweetData[1].text
-					},
-					thumbnail:{
-						ar: tweetData[0].entities.media[0]["media_url"],
-						en: tweetData[1].entities.media[0]["media_url"]
-					}
-				};
-
-				res.json({
-					success: true,
-					tweets
-				})
-			})
-		});
-
-		requestGet.on("error", (error) => {
-			res.json({
-				success: false,
-				error,
-				tweets:{}
-			})
-		})
-
-	}catch (e) {
-		res.json({
-			success: false,
-			error:e,
-			tweets:{}
-		})
-	}
-
-
-
-}
-router.get("/latest-tweets", tweetHandler);
-
-
-const emailTemplateHandler = (req, res, next) => {
-	HelperAPIController.check_email((result) => {
-		res.send(result)
-	})
-}
-
-router.get("/check-email-template", emailTemplateHandler)
 
 
 
@@ -528,11 +584,7 @@ const statusNotificationHandler = (req, res, next) => {
 	});
 }
 
-
 router.get("/status-notifications", statusNotificationHandler)
-
-
-
 router.use("/notifications", notification_routes);
 
 

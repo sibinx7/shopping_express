@@ -7,9 +7,6 @@ import UserMail from "../helpers/mails/user.mail";
 
 export default class UserAPIController{
 	static login = (formData, callback) => {
-		console.log(JSON.stringify(formData))
-		console.log(Base64.encode(formData.password))
-		console.log("Above...")
 		User.findOne({
 			email: formData.email ,
 			password: Base64.encode(formData.password),
@@ -53,7 +50,7 @@ export default class UserAPIController{
 				};
 
 			try{
-				const token = Base64.encode(`${username}-${password}`);
+				const token = Base64.encode(`${username}:${password}`);
 				if(token){
 					userFields["token"] = token;
 				}
@@ -209,7 +206,7 @@ export default class UserAPIController{
 			User.findOne({email}, (err, user) => {
 				if(!err){
 					const {email, password } = user;
-					const token = Base64.encode(`${email}`)
+					const token = Base64.encode(`${email}`);
 					UserMail.forgot_password_mail(email, token, ({success, message, error}) => {
 						callback({success, message, error})
 					})
