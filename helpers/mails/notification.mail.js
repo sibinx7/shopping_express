@@ -29,8 +29,7 @@ class Newsletter {
 			]
 		}
 
-		const newsletterMail = MailJET.post("send",{version:"v3.1"})
-			.request(messageInformation);
+		const newsletterMail = MailJET.post("send",{version:"v3.1"}).request(messageInformation);
 		newsletterMail.then((result) => {
 			console.log("Newsletter mail send successfully");
 			callback({

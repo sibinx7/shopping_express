@@ -23,8 +23,7 @@ class ProjectMail{
 			content_html = BaseMail.fill_with_placeholder(content_html);	
 
 			let messageInformation = setCommonMessageInformation(toMails, content_html, text_content);
-			const project_incomplete_mail = MailJET.post("send", {version:"v3.1"})
-				.request(messageInformation);
+			const project_incomplete_mail = MailJET.post("send", {version:"v3.1"}).request(messageInformation);
 			
 			project_incomplete_mail.then((response) => {
 				callback({
@@ -59,8 +58,7 @@ class ProjectMail{
 				}
 			]
 			let messageInformation = setCommonMessageInformation(toMails, html_content);
-			const project_submission_mail = MailJET.post("send", {version:"v3.1"})
-				.request(messageInformation);
+			const project_submission_mail = MailJET.post("send", {version:"v3.1"}).request(messageInformation);
 			project_submission_mail.then((response) => {
 				callback({success: true, message:"Project submission message send"})
 			}, (error) => {
