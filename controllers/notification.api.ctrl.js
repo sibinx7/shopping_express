@@ -2,13 +2,12 @@ import {	omit, pick } from "underscore";
 import Notification from "../models/Notification";
 
 
+/**
+ * @description Update notification based on different actions
+ */
 export default class NotificationAPIController {
 
-	static list = (type, query, callback) => {
-		let filter = {};
-		if(type === "unread"){
-			filter["read"] = false;
-		}
+	static list = (filter={}, query, callback) => {
 		let options = {limit:10, skip: 0};
 		if(query.per_page){
 			options["limit"] = parseInt(query.per_page);
@@ -53,17 +52,21 @@ export default class NotificationAPIController {
 			}
 		})
 
+	};
+
+	static unread(options,callback){
+
+	};
+
+	static mark_as_read(){
+
+	};
+
+	static delete(){
+
 	}
 
-	static unread = (options,callback) => {
-
-	}
-
-	static mark_as_read = () => {
-
-	}
-
-	static delete = () => {
+	static create(){
 
 	}
 
