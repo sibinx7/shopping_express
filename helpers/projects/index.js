@@ -18,7 +18,11 @@ export const checkProjectCompleteness = (projectData) => {
 	let tempCompleted = true;
 	// console.log(projectData)
 	each(requiredFields, (field, index) => {
-		if(typeof projectData[field] === "undefined" && !projectData[field]){
+		console.log(typeof projectData[field])
+		console.log(field)
+		console.log(typeof projectData[field])
+		console.log(!projectData[field])
+		if(typeof projectData[field] === "undefined" || (projectData && !projectData[field])){
 			tempCompleted = false;
 			return true;
 		}
