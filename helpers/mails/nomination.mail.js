@@ -8,4 +8,4 @@ let FromMails = [
 		"Email": SETTINGS.MAIL_FROM,
 		"Name": "Akhlaquna"
 	}
-]
+];

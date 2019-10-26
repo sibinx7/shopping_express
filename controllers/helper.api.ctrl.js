@@ -67,32 +67,33 @@ class HelperAPIController {
 								const project_completeness = checkProjectCompleteness(project);
 								console.log(project_completeness)
 								console.log("Project is completed or not...")
-								const {	submitted, status, completed} = project_completeness;
-								if(!completed){
-									notifications.push({
-										type:"warning",
-										message: "Your project is incomplete. Continue the missing part and submit before the deadline",
-										intl_key: "project_is_incomplete",
-										show: true
-									})
-								}
-
-								if(!submitted && completed){
-									notifications.push({
-										type:"warning",
-										message:"You have completed your project. Submit now",
-										intl_key: "project_completed_submit_now",
-										show: true
-									})
-								}
-
-								if(completed && submitted){
-									notifications.push({
-										type: "success",
-										message: "Your project was successfully submitted",
-										intl_key: "project_submitted",
-										show: true
-									})
+								try{
+									const {	submitted, status, completed} = project_completeness;
+									if(!completed){
+										notifications.push({
+											type:"warning",
+											message: "Your project is incomplete. Continue the missing part and submit before the deadline",
+											intl_key: "project_is_incomplete",
+											show: true
+										})
+									}
+									if(!submitted && completed){
+										notifications.push({
+											type:"warning",
+											message:"You have completed your project. Submit now",
+											intl_key: "project_completed_submit_now",
+											show: true
+										})
+									}
+									if(completed && submitted){
+										notifications.push({
+											type: "success",
+											message: "Your project was successfully submitted",
+											intl_key: "project_submitted",
+											show: true
+										})
+									}
+								}catch (e) {
 								}
 							}
 						}

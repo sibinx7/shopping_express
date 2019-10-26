@@ -3,6 +3,14 @@ import SETTINGS from '../../env';
 const path = require("path");
 import {	each } from "underscore";
 
+let FromMails = [
+	{
+		"Email": SETTINGS.MAIL_FROM,
+		"Name": "Akhlaquna"
+	}
+];
+
+
 /**
  * @method
  * @name getEmailTemplate
