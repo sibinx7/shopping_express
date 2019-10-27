@@ -14,19 +14,30 @@ export default class UserAPIController{
 		})
 			.populate("-password")
 			.exec((err, user) => {
-				console.log(JSON.stringify(err))
-				console.log(JSON.stringify(user))
-				console.log("After login...")
 				if(!err){
-					callback({
-						user,
-						success: true,
-						logged: true
-					})
+					let responseData = {};
+					if(user){
+						responseData = {
+							user,
+							success: true,
+							logged: true,
+							message: "User logged"
+						}
+					}else{
+						responseData = {
+							user,
+							success: false,
+							logged: false,
+							error: "User not exist"
+						}
+					}
+					console.log(JSON.stringify(responseData));
+					callback(responseData)
 				}else{
 					callback({
 						success: false,
-						logged: false
+						logged: false,
+						error: err
 					})
 				}
 			})
@@ -165,7 +176,6 @@ export default class UserAPIController{
 			}, (err, user) => {
 				if(!err){
 					// Call Reset password
-
 					callback({
 						success: true,
 						user
