@@ -31,7 +31,8 @@ const UserSchema = mongoose.Schema({
 	admin: Boolean,
 	super_admin: Boolean,
 	token: String,
-	active: Boolean
+	active: Boolean,
+	completed_projects: Array 
 });
 
 /**
