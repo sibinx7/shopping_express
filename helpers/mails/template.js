@@ -116,14 +116,15 @@ export class BaseMail{
 	}
 };
 
-export const setCommonMessageInformation = (toMails,htmlContent, textContent="") => {
+export const setCommonMessageInformation = (toMails,htmlContent, textContent="", subject) => {
 
 			let messageInformation = {
 				"Messages":[
 					{
 						"From": FromMails[0],
 						"To":toMails,
-						"Subject": textContent,
+						"Subject": subject,
+						"textPart":textContent,
 						"HTMLPart": htmlContent
 					}
 				]

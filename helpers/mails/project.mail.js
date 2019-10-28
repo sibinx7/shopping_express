@@ -21,8 +21,9 @@ class ProjectMail{
 		getEmailTemplate("project_incomplete", language, (content_html) => {
 
 			content_html = BaseMail.fill_with_placeholder(content_html);	
-
-			let messageInformation = setCommonMessageInformation(toMails, content_html, text_content);
+			let text_content="";
+			let subject="Akhlaquna : Your project still incomplete"
+			let messageInformation = setCommonMessageInformation(toMails, content_html, text_content, subject);
 			const project_incomplete_mail = MailJET.post("send", {version:"v3.1"}).request(messageInformation);
 			
 			project_incomplete_mail.then((response) => {
@@ -56,8 +57,10 @@ class ProjectMail{
 					"Email": user.email,
 					"Name": `${user.first_name} ${user.last_name}`
 				}
-			]
-			let messageInformation = setCommonMessageInformation(toMails, html_content);
+			];
+			let text_content="";
+			let subject= "Akhlaquna : Thank you for your project submission";
+			let messageInformation = setCommonMessageInformation(toMails, html_content, text_content, subject);
 			const project_submission_mail = MailJET.post("send", {version:"v3.1"}).request(messageInformation);
 			project_submission_mail.then((response) => {
 				callback({success: true, message:"Project submission message send"})
@@ -79,7 +82,8 @@ class ProjectMail{
 				html_content = BaseMail.fill_with_placeholder(html_content);
 				html_content = html_content.replace("{{akhlaquna_project_id", project._id);
 				let text_content = "";
-				let messageInformation = setCommonMessageInformation(toMails, html_content, text_content);
+				let subject = "Akhlaquna : Thank you for your project submission";
+				let messageInformation = setCommonMessageInformation(toMails, html_content, text_content, subject);
 
 				const project_submitted = MailJET.post("send", {version:"v3.1"}).request(messageInformation);
 				project_submitted.then((response) => {
