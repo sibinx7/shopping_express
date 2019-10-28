@@ -101,7 +101,9 @@ const STATIC_PLACEHOLDERS = {
 	"{{akhlaquna_award_open_date":SETTINGS.AKHLAQUNA_AWARD_OPEN,
 	"{{akhlaquna_complete_project}}":"",
 	"{{akhlaquna_submit_project}}":"",
-	"{{akhlaquna_add_project}}":"",	
+	"{{akhlaquna_add_project}}":"",
+	"{{akhlaquna_project_id}}":"",
+	"{{akhlaquna_project_details}}":`${SETTINGS.CLIENT_DOMAIN}/sign-in`
 }
 
 export class BaseMail{
@@ -125,7 +127,7 @@ export const setCommonMessageInformation = (toMails,htmlContent, textContent="")
 						"HTMLPart": htmlContent
 					}
 				]
-			}
+			};
 
 
 			return messageInformation;

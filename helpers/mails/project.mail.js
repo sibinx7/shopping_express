@@ -77,8 +77,10 @@ class ProjectMail{
 		try{
 			getEmailTemplate("project_submitted", language, (html_content) => {
 				html_content = BaseMail.fill_with_placeholder(html_content);
+				html_content = html_content.replace("{{akhlaquna_project_id", project._id);
 				let text_content = "";
 				let messageInformation = setCommonMessageInformation(toMails, html_content, text_content);
+
 				const project_submitted = MailJET.post("send", {version:"v3.1"}).request(messageInformation);
 				project_submitted.then((response) => {
 					callback({success: true, message: "Project submitted message send"})
