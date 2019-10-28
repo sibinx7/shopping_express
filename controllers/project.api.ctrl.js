@@ -262,6 +262,18 @@ export default class ProjectAPIController{
 													if(!errorProject){
 														let  projectStatus = checkProjectCompleteness(projectData);
 														if(projectStatus.submitted){
+															// Update project completed 
+															let completed_projects = userData.completed_projects;
+															if(typeof completed_projects !== "string"){
+																if(completed_projects.indexOf(projectData._id) > -1){
+																	completed_projects.push(projectData._id);
+																	User.updateOne({_id: formData.user_id},{completed_projects}, (err, data) => {
+																		console.log("User updated...")
+																	})
+																}
+																
+															}
+
 															// Send project complete mail
 															const {	language } = formData;
 															ProjectMail.project_submitted(language, userData, projectData, (sub_mail_response) => {
