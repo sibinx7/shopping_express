@@ -288,20 +288,19 @@ export default class UserAPIController{
 			User.findOne({token}, (err, user) => {
 				if(!err){
 					if(user){
+						user["active"] = true;
 						User.updateOne({email: user.email}, {
 							active: true,
 							updated_at: (new Date()),
 							last_active: (new Date())
-						}, (error, updated ) => {
+						} , (error, updated ) => {
 							if(!error){
-
 								// Send another email
-								UserMail.activate_account(user,language);
-
 								callback({
 									success: true,
 									user
-								})
+								});
+								UserMail.activate_account(user,language);
 							}else{
 								callback({success: false, error})
 							}

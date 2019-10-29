@@ -106,9 +106,7 @@ const userActivateAccount = (req, res, next) => {
 			// 	username: user.email,
 			// 	password: user.password
 			// }, '777');
-
 			token = Base64.btoa(`${user.email}:${user.password}`);
-
 			res.json({
 				success,
 				error,
