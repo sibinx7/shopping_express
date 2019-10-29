@@ -249,7 +249,6 @@ export default class ProjectAPIController{
 				if(!err){
 					if(formData.user_id){
 						User.findOne({_id: formData.user_id}, (userError, userData) => {
-							console.log("User got")
 							console.log(formData.user_id)
 							if(!userError){
 								console.log("Checking form iss")
