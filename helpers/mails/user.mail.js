@@ -31,6 +31,7 @@ class UserMail {
 			 */
 
 
+			html_content = BaseMail.fill_with_placeholder(html_content);
 			html_content = html_content.replace("{{akhlaquna_activation_link}}", `${SETTINGS.CLIENT_DOMAIN}/account-activation/${user.token}`);
 			html_content = html_content.replace("{{akhlaquna_about_url}}", `${SETTINGS.CLIENT_DOMAIN_ABOUT}`);
 			html_content = html_content.replace("{{akhlaquna_submit_project}}", `${SETTINGS.CLIENT_DOMAIN}/sign-in`);
@@ -73,6 +74,7 @@ class UserMail {
 			 * @type {{Messages: {HTMLPart: undefined, From: *, To: {Email: *}[], Subject: string}[]}}
 			 */
 
+			content_html = BaseMail.fill_with_placeholder(content_html);
 			content_html = content_html.replace("{{akhlaquna_reset_password_link}}", `${SETTINGS.CLIENT_DOMAIN}/reset-password/${token}`)
 
 			let messageInformation = {
@@ -115,6 +117,7 @@ class UserMail {
 		]
 
 		getEmailTemplate("register", language, (content_html) => {
+			content_html = BaseMail.fill_with_placeholder(content_html);
 			content_html = content_html.replace("{{akhlaquna_award_end}}", SETTINGS.AKHLAQUNA_AWARD_END);
 			content_html = content_html.replace("{{akhlaquna_add_project}}", `${SETTINGS.CLIENT_DOMAIN}/sign-in`);
 			content_html = content_html.replace("{{akhlaquna_submit_project}}", `${SETTINGS.CLIENT_DOMAIN}/sign-in`);
