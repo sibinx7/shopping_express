@@ -103,7 +103,8 @@ const STATIC_PLACEHOLDERS = {
 	"{{akhlaquna_submit_project}}":"",
 	"{{akhlaquna_add_project}}":"",
 	"{{akhlaquna_project_id}}":"",
-	"{{akhlaquna_project_details}}":`${SETTINGS.CLIENT_DOMAIN}/sign-in`
+	"{{akhlaquna_project_details}}":`${SETTINGS.CLIENT_DOMAIN}/sign-in`,
+	"{{akhlaquna_year}}": (new Date()).getFullYear()
 }
 
 export class BaseMail{
