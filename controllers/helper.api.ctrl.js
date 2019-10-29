@@ -111,8 +111,23 @@ class HelperAPIController {
 				})
 			}
 		})
+	}
 
-
+	static check_qid(qid_no, callback){
+		User.countDocuments({
+			qid_no
+		}, (err, count) => {
+			if(!err){
+				let responseData = {};
+				if(count){
+					responseData["error"] = "QID already existing";
+				}else{
+					responseData["message"] = "QID not exist"
+				}
+				responseData["success"] = !count;
+				callback(responseData)
+			}
+		})
 	}
 
 }

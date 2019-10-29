@@ -314,6 +314,30 @@ const emailTemplateHandler = (req, res, next) => {
 	})
 };
 router.get("/check-email-template", emailTemplateHandler);
+
+const handleCheckQUIDs = (req, res, next) => {
+	try{
+		const formData = req.body;
+		const {	qid } = req.params;
+		if(qid){
+			HelperAPIController.check_qid(qid, ({success, error, message}) => {
+				res.json({
+					success, error, message
+				})
+			})
+		}
+	}catch (e) {
+		res.statusCode(500);
+		res.json({
+			success: false,
+			error: "QID not available"
+		})
+	}
+
+
+};
+router.post("/check-qid/:qid?", handleCheckQUIDs);
+
 /* end Without Token Validation */
 
 
