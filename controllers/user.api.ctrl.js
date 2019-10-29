@@ -18,34 +18,42 @@ export default class UserAPIController{
 			.exec((err, user) => {
 				if(!err){
 					// Check whether project complete or not
-					if(user.roles.indexOf("user") > -1){ // Only for Users
-						Project.findOne({user_id: user._id}, (errProject, projectData) => {
-							if(!errProject){
-								let user_completeness = false;
-								if(projectData.submitted){
-									user_completeness = true;
-								}
-								let project_complete = checkProjectCompleteness(projectData);
-								if(project_complete.submitted){
-									user_completeness = true;
-								}
-								if(user_completeness){
-									if(user.completed_projects.indexOf(projectData._id) === -1){
-										let completed_projects;
-										if(Array.isArray(user.completed_projects) && user.completed_projects.length){
-											completed_projects = [...user.completed_projects, projectData._id]
-										}else{
-											completed_projects = [projectData._id];
+					if(!user){
+						callback({
+							success: false,
+							user: null,
+							error: "User not found with this Email and Password"
+						})
+					}
+					if(user && Array.isArray(user.roles) && user.roles.indexOf("user") > -1){ // Only for Users
+						if(user._id){
+							Project.findOne({user_id: user._id}, (errProject, projectData) => {
+								if(!errProject){
+									let user_completeness = false;
+									if(projectData.submitted){
+										user_completeness = true;
+									}
+									let project_complete = checkProjectCompleteness(projectData);
+									if(project_complete.submitted){
+										user_completeness = true;
+									}
+									if(user_completeness){
+										if(user.completed_projects.indexOf(projectData._id) === -1){
+											let completed_projects;
+											if(Array.isArray(user.completed_projects) && user.completed_projects.length){
+												completed_projects = [...user.completed_projects, projectData._id]
+											}else{
+												completed_projects = [projectData._id];
+											}
+											User.updateOne({_id:user._id}, {
+												completed_projects:completed_projects
+											});
 										}
-										User.updateOne({_id:user._id}, {
-											completed_projects:completed_projects
-										});
 									}
 								}
-							}
-						});
+							});
+						}
 					}
-
 					let responseData = {};
 					if(user){
 						responseData = {
