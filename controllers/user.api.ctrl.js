@@ -48,13 +48,21 @@ export default class UserAPIController{
 												User.updateOne({_id:user._id}, {
 													completed_projects:completed_projects
 												});
+												if(!user.completed_projects){
+													user["completed_projects"] = completed_projects;
+												}
 											}
 										}
 									}
 								}
+								callback({
+									success: true,
+									user,
+									message:"User logged"
+								})
 							});
 						}
-					}else{
+					}else{ // Other users, admin, super_admin
 						let responseData = {};
 						if(user){
 							responseData = {

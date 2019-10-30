@@ -58,14 +58,17 @@ router.post("/login", (req, res, next) => {
 					token,
 					success: true
 				})
-			}catch (e) {
+			}catch (error) {
 				res.json({
 					success: false,
+					error:error,
+					...response
 				})
 			}
 		}else{
 			res.json({
 				success: false,
+				...response
 			})
 		}
 	})
