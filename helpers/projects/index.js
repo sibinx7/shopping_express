@@ -13,18 +13,12 @@ import {dateDifference} from "../common";
  */
 
 export const checkProjectCompleteness = (projectData) => {
-	console.log(JSON.stringify(projectData))
-	console.log("++++++++++++++++++++++++++++++++++++++++++")
 	try{
 		let status = "incomplete";
 		const requiredFields = ["title", "photo", "how_hear", "morals", "website"];
 		let tempCompleted = true;
 		// console.log(projectData)
 		each(requiredFields, (field, index) => {
-			console.log(typeof projectData[field])
-			console.log(field)
-			console.log(typeof projectData[field])
-			console.log(!projectData[field])
 			if(typeof projectData[field] === "undefined" || (projectData && !projectData[field])){
 				tempCompleted = false;
 				return true;
@@ -66,7 +60,6 @@ export const checkProjectCompleteness = (projectData) => {
 				const requiredFields = ["question1", "question2", "question6", "question7", "question8"];
 				each(requiredFields, (item, index) => {
 					if(typeof projectData[item] === "undefined" || !projectData[item]){
-						console.log("Question ", item)
 						tempCompleted = false;
 						return true
 					}
@@ -108,8 +101,7 @@ export const checkProjectCompleteness = (projectData) => {
 			}
 		}
 	}catch (e) {
-		console.log(e)
-		console.log("Check function error")
+		console.log(e);
 		return {
 			submitted: false,
 			completed: false,

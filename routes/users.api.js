@@ -41,18 +41,7 @@ router.post("/login", (req, res, next) => {
 	UserAPIController.login(formData, (response) => {
 		if(response.success){
 			try{
-				console.log(response)
-				console.log("Is it user response...")
-				const {	user } = response;
-				let token ="";
-				// Token base, bearer
-				// token = jwt.sign({
-				// 	username: user.email,
-				// 	password: user.password
-				// }, "777");
-
-
-				token = Base64.btoa(`${formData.email}:${formData.password}`);
+				let token = Base64.btoa(`${formData.email}:${formData.password}`);
 				res.json({
 					user: response.user,
 					token,
@@ -359,12 +348,7 @@ const VerifyHeaderToken = (req, res, next) => {
 				email: auth_decode.name,
 				password: Base64.encode(auth_decode.pass)
 			};
-			console.log("Auth decode and form...")
-			console.log(auth_decode)
-			console.log(formData)
 			User.findOne(formData, (err, user) => {
-				console.log(JSON.stringify(err))
-				console.log("Inside user information...")
 				if(!err){
 					next();
 				}else{
@@ -374,7 +358,6 @@ const VerifyHeaderToken = (req, res, next) => {
 		}else{
 			res.status(401).end("Unauthorized access")
 		}
-
 	}catch (e) {
 		console.log(e);
 		console.log("Some errors try catch...")

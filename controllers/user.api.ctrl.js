@@ -7,6 +7,20 @@ import {checkProjectCompleteness} from "../helpers/projects";
 // import User from "../models/User";
 
 
+const checkLoggedOneIsUser = (user) => {
+	let userIsUser = false;
+	if(!!user && Array.isArray(user.roles) && user.roles.indexOf("user") > -1){
+		userIsUser = true;
+	}
+	if(!user.roles && !user.admin && !user.super_admin){
+		userIsUser = true;
+	}
+	if(user.roles && !user.roles.length){
+		userIsUser = true;
+	}
+	return userIsUser;
+};
+
 export default class UserAPIController{
 	static login = (formData, callback) => {
 		User.findOne({
@@ -16,6 +30,9 @@ export default class UserAPIController{
 		})
 			.populate("-password")
 			.exec((err, user) => {
+				console.log(user)
+				console.log("Hello User...")
+				console.log(checkLoggedOneIsUser(user))
 				if(!err){
 					// Check whether project complete or not
 					if(!user){
@@ -24,12 +41,13 @@ export default class UserAPIController{
 							user: null,
 							error: "User not found with this Email and Password"
 						})
-					}else if(!!user && Array.isArray(user.roles) && user.roles.indexOf("user") > -1){ // Only for Users
+					}else if(checkLoggedOneIsUser(user)){ // Only for Users
+						console.log("Current user is User")
 						if(user._id){
 							Project.findOne({user_id: user._id}, (errProject, projectData) => {
 								if(!errProject){
 									let user_completeness = false;
-									if(projectData){
+									if(projectData && projectData._id){
 										if(projectData.submitted){
 											user_completeness = true;
 										}
@@ -37,9 +55,10 @@ export default class UserAPIController{
 										if(project_complete.submitted){
 											user_completeness = true;
 										}
+										console.log("Project complete", user_completeness);
+										let completed_projects = [];
 										if(user_completeness){
-											if(user.completed_projects.indexOf(projectData._id) === -1){
-												let completed_projects;
+											if(!!user.completed_projects && user.completed_projects.indexOf(projectData._id) === -1){
 												if(Array.isArray(user.completed_projects) && user.completed_projects.length){
 													completed_projects = [...user.completed_projects, projectData._id]
 												}else{
@@ -48,9 +67,13 @@ export default class UserAPIController{
 												User.updateOne({_id:user._id}, {
 													completed_projects:completed_projects
 												});
-												if(!user.completed_projects){
-													user["completed_projects"] = completed_projects;
-												}
+												console.log(user.completed_projects)
+												console.log("Above is my completed projects...")
+											}else{
+												completed_projects = [projectData._id]
+											}
+											if(!user.completed_projects || !(user.completed_projects.length)){
+												user["completed_projects"] = completed_projects;
 											}
 										}
 									}
