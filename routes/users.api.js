@@ -63,7 +63,6 @@ router.post("/login", (req, res, next) => {
 					success: false,
 				})
 			}
-
 		}else{
 			res.json({
 				success: false,
@@ -327,11 +326,11 @@ const handleCheckQUIDs = (req, res, next) => {
 			})
 		}
 	}catch (e) {
-		res.statusCode(500);
 		res.json({
 			success: false,
 			error: "QID not available"
-		})
+		});
+		res.statusCode(500);
 	}
 
 

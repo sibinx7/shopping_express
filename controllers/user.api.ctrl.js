@@ -24,8 +24,7 @@ export default class UserAPIController{
 							user: null,
 							error: "User not found with this Email and Password"
 						})
-					}
-					if(user && Array.isArray(user.roles) && user.roles.indexOf("user") > -1){ // Only for Users
+					}else if(!!user && Array.isArray(user.roles) && user.roles.indexOf("user") > -1){ // Only for Users
 						if(user._id){
 							Project.findOne({user_id: user._id}, (errProject, projectData) => {
 								if(!errProject){
@@ -53,25 +52,25 @@ export default class UserAPIController{
 								}
 							});
 						}
-					}
-					let responseData = {};
-					if(user){
-						responseData = {
-							user,
-							success: true,
-							logged: true,
-							message: "User logged"
-						}
 					}else{
-						responseData = {
-							user,
-							success: false,
-							logged: false,
-							error: "User not exist"
+						let responseData = {};
+						if(user){
+							responseData = {
+								user,
+								success: true,
+								logged: true,
+								message: "User logged"
+							}
+						}else{
+							responseData = {
+								user,
+								success: false,
+								logged: false,
+								error: "User not exist"
+							}
 						}
+						callback(responseData)
 					}
-					console.log(JSON.stringify(responseData));
-					callback(responseData)
 				}else{
 					callback({
 						success: false,
