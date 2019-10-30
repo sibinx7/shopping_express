@@ -29,24 +29,26 @@ export default class UserAPIController{
 							Project.findOne({user_id: user._id}, (errProject, projectData) => {
 								if(!errProject){
 									let user_completeness = false;
-									if(projectData.submitted){
-										user_completeness = true;
-									}
-									let project_complete = checkProjectCompleteness(projectData);
-									if(project_complete.submitted){
-										user_completeness = true;
-									}
-									if(user_completeness){
-										if(user.completed_projects.indexOf(projectData._id) === -1){
-											let completed_projects;
-											if(Array.isArray(user.completed_projects) && user.completed_projects.length){
-												completed_projects = [...user.completed_projects, projectData._id]
-											}else{
-												completed_projects = [projectData._id];
+									if(projectData){
+										if(projectData.submitted){
+											user_completeness = true;
+										}
+										let project_complete = checkProjectCompleteness(projectData);
+										if(project_complete.submitted){
+											user_completeness = true;
+										}
+										if(user_completeness){
+											if(user.completed_projects.indexOf(projectData._id) === -1){
+												let completed_projects;
+												if(Array.isArray(user.completed_projects) && user.completed_projects.length){
+													completed_projects = [...user.completed_projects, projectData._id]
+												}else{
+													completed_projects = [projectData._id];
+												}
+												User.updateOne({_id:user._id}, {
+													completed_projects:completed_projects
+												});
 											}
-											User.updateOne({_id:user._id}, {
-												completed_projects:completed_projects
-											});
 										}
 									}
 								}
