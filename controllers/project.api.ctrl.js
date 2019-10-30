@@ -208,6 +208,8 @@ export default class ProjectAPIController{
 			}
 
 			if(!errors && !count){
+				formData["created_at"] = new Date();
+				formData["updated_at"] = new Date();
 				Project.create(formData, (err, project) => {
 					if(!err){
 						callback({
@@ -232,7 +234,9 @@ export default class ProjectAPIController{
 		formData = omit(formData, "_id", "_v");
 		console.log(_id)
 		console.log("Project ID")
+		formData["updated_at"] = new Date();
 		const statusBeforeSave = checkProjectCompleteness(formData);
+
 		if(statusBeforeSave && statusBeforeSave.completed){
 			formData["completed"] = true;
 			formData["status"] = "completed";

@@ -1,4 +1,5 @@
 import {	each	} from "underscore";
+import {dateDifference} from "../common";
 /**
  * @method
  * @name checkProjectCompleteness
@@ -12,63 +13,24 @@ import {	each	} from "underscore";
  */
 
 export const checkProjectCompleteness = (projectData) => {
+	console.log(JSON.stringify(projectData))
 	console.log("++++++++++++++++++++++++++++++++++++++++++")
-	let status = "incomplete";
-	const requiredFields = ["title", "photo", "how_hear", "morals", "website"];
-	let tempCompleted = true;
-	// console.log(projectData)
-	each(requiredFields, (field, index) => {
-		console.log(typeof projectData[field])
-		console.log(field)
-		console.log(typeof projectData[field])
-		console.log(!projectData[field])
-		if(typeof projectData[field] === "undefined" || (projectData && !projectData[field])){
-			tempCompleted = false;
-			return true;
-		}
-	});
-
-	if(!tempCompleted){
-		return {
-			status,
-			completed: false,
-			submitted: false
-		}
-	}
-	if(tempCompleted){
-		if(projectData.hasOwnProperty("project")){
-			const requiredProjectFields = ["describe", "innovation", "sustainability"];
-			each(requiredProjectFields, (item, index) => {
-				if(!projectData["project"]){
-					tempCompleted = false;
-				}
-				if(projectData["project"]){
-					const {	project } = projectData;
-					if(typeof project[item] === "undefined" || !project[item]){
-						tempCompleted = false;
-						return true;
-					}
-				}
-			})
-		}
-		if(!tempCompleted){
-			return  {
-				status,
-				completed: false,
-				submitted: false
+	try{
+		let status = "incomplete";
+		const requiredFields = ["title", "photo", "how_hear", "morals", "website"];
+		let tempCompleted = true;
+		// console.log(projectData)
+		each(requiredFields, (field, index) => {
+			console.log(typeof projectData[field])
+			console.log(field)
+			console.log(typeof projectData[field])
+			console.log(!projectData[field])
+			if(typeof projectData[field] === "undefined" || (projectData && !projectData[field])){
+				tempCompleted = false;
+				return true;
 			}
-		}
+		});
 
-		if(tempCompleted && typeof projectData["project"] === "undefined"){
-			const requiredFields = ["question1", "question2", "question6", "question7", "question8"];
-			each(requiredFields, (item, index) => {
-				if(typeof projectData[item] === "undefined" || !projectData[item]){
-					console.log("Question ", item)
-					tempCompleted = false;
-					return true
-				}
-			})
-		}
 		if(!tempCompleted){
 			return {
 				status,
@@ -76,21 +38,82 @@ export const checkProjectCompleteness = (projectData) => {
 				submitted: false
 			}
 		}
-
 		if(tempCompleted){
-			if(typeof projectData["submitted"] !== "undefined" && !!projectData.submitted){
-				return {
-					submitted: true,
-					completed: true,
-					status: "submitted"
-				}
-			}else if(typeof projectData["submitted"] === "undefined" || !!projectData["completed"]){
-				return {
-					submitted: false,
-					completed: true,
-					status: "completed"
+			if(projectData.hasOwnProperty("project")){
+				const requiredProjectFields = ["describe", "innovation", "sustainability"];
+				each(requiredProjectFields, (item, index) => {
+					if(!projectData["project"]){
+						tempCompleted = false;
+					}
+					if(projectData["project"]){
+						const {	project } = projectData;
+						if(typeof project[item] === "undefined" || !project[item]){
+							tempCompleted = false;
+							return true;
+						}
+					}
+				})
+			}
+			if(!tempCompleted){
+				return  {
+					status,
+					completed: false,
+					submitted: false
 				}
 			}
+
+			if(tempCompleted && typeof projectData["project"] === "undefined"){
+				const requiredFields = ["question1", "question2", "question6", "question7", "question8"];
+				each(requiredFields, (item, index) => {
+					if(typeof projectData[item] === "undefined" || !projectData[item]){
+						console.log("Question ", item)
+						tempCompleted = false;
+						return true
+					}
+				})
+			}
+			if(!tempCompleted){
+				return {
+					status,
+					completed: false,
+					submitted: false
+				}
+			}
+
+			if(tempCompleted){
+				if(projectData && typeof projectData["submitted"] !== "undefined" && !!projectData.submitted){
+					let currentTime = new Date();
+					let lastActiveTime = new Date(projectData.updated_at);
+					// check how long it exist
+					const diffDates = dateDifference(currentTime, lastActiveTime);
+					return {
+						submitted: true,
+						completed: true,
+						status: "submitted",
+						date_diff: diffDates
+					}
+				}else if((typeof projectData["submitted"] === "undefined" || !projectData.submitted) || !!projectData["completed"]){
+					return {
+						submitted: false,
+						completed: true,
+						status: "completed"
+					}
+				}else{
+					return {
+						submitted: false,
+						completed: false,
+						status: "incomplete"
+					}
+				}
+			}
+		}
+	}catch (e) {
+		console.log(e)
+		console.log("Check function error")
+		return {
+			submitted: false,
+			completed: false,
+			status:"incomplete"
 		}
 	}
 };

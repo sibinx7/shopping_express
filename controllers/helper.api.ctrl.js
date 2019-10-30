@@ -52,23 +52,24 @@ class HelperAPIController {
 					Project.findOne({user_id: user._id}, (error, project) => {
 						let notifications = [];
 						const user_completeness = checkUserComplete(user);
-						console.log(user_completeness)
-						console.log("Check for completeness...")
-						if(user_completeness && !user_completeness.complete){
-							notifications.push({
-								 type: "warning",
-								 message:"Your profile is incomplete. Please add the missing information to be able to add a project. ",
-                 intl_key:"your_profile_incomplete_add_missing_to_add_project",
-                 show: true
-							})
-						}					
+						if(project && !project.submitted){
+							if(user_completeness && !user_completeness.complete){
+								notifications.push({
+									type: "warning",
+									message:"Your profile is incomplete. Please add the missing information to be able to add a project. ",
+									intl_key:"your_profile_incomplete_add_missing_to_add_project",
+									show: true
+								})
+							}
+						}
+
 						if(!error){
 							if(project){
 								const project_completeness = checkProjectCompleteness(project);
-								console.log(project_completeness)
-								console.log("Project is completed or not...")
 								try{
-									const {	submitted, status, completed} = project_completeness;
+									console.log(project_completeness)
+									console.log(">>>>")
+									const {	submitted, status, completed, date_diff} = project_completeness;
 									if(!completed){
 										notifications.push({
 											type:"warning",
@@ -86,14 +87,19 @@ class HelperAPIController {
 										})
 									}
 									if(completed && submitted){
-										notifications.push({
-											type: "success",
-											message: "Your project was successfully submitted",
-											intl_key: "project_submitted",
-											show: true
-										})
+										if(date_diff < 5){
+											notifications.push({
+												type: "success",
+												message: "Your project was successfully submitted",
+												intl_key: "project_submitted",
+												show: true
+											})
+										}
 									}
 								}catch (e) {
+									console.log(e)
+									console.log("Profile incomplete message..")
+									return
 								}
 							}
 						}
@@ -101,6 +107,11 @@ class HelperAPIController {
 							success: true,
 							notifications
 						})
+					})
+				}else{
+					callback({
+						success: false,
+						notifications:[]
 					})
 				}
 			}else{
