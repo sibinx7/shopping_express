@@ -33,12 +33,18 @@ const commonUserResponse = (result) => {
 /* Without any Token verification */
 router.post("/login", (req, res, next) => {
 	const formData = req.body;
+	console.log("I am loggined...")
+	console.log(formData)
+	console.log("?????")
 	if(!formData){
 		res.json({
-			status: 404
+			status: 404,
+			success: false 
 		})
 	}
+	console.log("User moved to another///")
 	UserAPIController.login(formData, (response) => {
+		console.log(response);
 		if(response.success){
 			try{
 				let token = Base64.btoa(`${formData.email}:${formData.password}`);

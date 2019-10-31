@@ -9,13 +9,16 @@ import {checkProjectCompleteness} from "../helpers/projects";
 
 const checkLoggedOneIsUser = (user) => {
 	let userIsUser = false;
+	if(user){
+		return false;
+	}
 	if(!!user && Array.isArray(user.roles) && user.roles.indexOf("user") > -1){
 		userIsUser = true;
 	}
-	if(!user.roles && !user.admin && !user.super_admin){
+	if(!!user && !user.roles && !user.admin && !user.super_admin){
 		userIsUser = true;
 	}
-	if(user.roles && !user.roles.length){
+	if(!!user && user.roles && !user.roles.length){
 		userIsUser = true;
 	}
 	return userIsUser;
