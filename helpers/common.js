@@ -7,3 +7,12 @@ export const dateDifference = (date1, date2) => {
 		return "";
 	}
 }
+
+export const getProjectNumber = (id, length = 8) => {
+	let ID="";
+	try{
+		ID = id.substr(0,length)
+	}catch (e) {
+	}
+	return ID;
+};

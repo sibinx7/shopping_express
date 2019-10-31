@@ -2,6 +2,7 @@ import SETTINGS from "../../env.js";
 
 import MailJET from "../../config/mailjet.config";
 import {	BaseMail, getEmailTemplate, setCommonMessageInformation	} from "./template";
+import {getProjectNumber} from "../common";
 
 
 
@@ -93,7 +94,8 @@ class ProjectMail{
 		console.log("Above project...")
 		try{
 			getEmailTemplate("project_submitted", language, (html_content) => {
-				html_content = html_content.replace("{{akhlaquna_project_id}}", project._id);
+				let project_id = getProjectNumber(project._id, 8)
+				html_content = html_content.replace("{{akhlaquna_project_id}}", project_id);
 				html_content = BaseMail.fill_with_placeholder(html_content);
 				let text_content = "";
 				let subject = "Akhlaquna : Thank you for your project submission";
