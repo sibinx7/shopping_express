@@ -279,6 +279,9 @@ export default class ProjectAPIController{
 
 															// Send project complete mail
 															const {	language } = formData;
+															if(!projectData._id){
+																projectData["_id"] = _id;
+															}
 															ProjectMail.project_submitted(language, userData, projectData, (sub_mail_response) => {
 																const {	success, message } = sub_mail_response;
 															});
