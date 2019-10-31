@@ -21,7 +21,7 @@ const notificationHandler = (req, res, next) => {
 			user_id
 		};
 		if(type){
-			filter["type"] = type;
+			filter["seen"] = false;
 		}
 		NotificationAPIController.list(filter, options, ({success, result, errors}) => {
 			res.json({
@@ -40,6 +40,13 @@ const notificationHandler = (req, res, next) => {
 
 };
 
-router.get("/:type?", notificationHandler);
+router.get("/list/:type?", notificationHandler);
+
+
+const handleUnseenNotificationCount = () => {
+
+}
+
+router.get("/unseen", handleUnseenNotificationCount)
 
 module.exports = router;

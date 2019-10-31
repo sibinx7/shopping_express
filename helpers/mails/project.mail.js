@@ -52,6 +52,16 @@ class ProjectMail{
 	static project_submission(language, user, project, callback){
 		getEmailTemplate("project_submission_email", language, (html_content) => {
 			html_content = BaseMail.fill_with_placeholder(html_content);
+			let current_user=" User";
+			if(user){
+				if(user.first_name){
+					user = `${user.first_name}}`
+				}
+				if(user.last_name){
+					user += ` ${user.last_name}`
+				}
+			}
+			html_content = html_content.replace("{{akhlaquna_current_user}}", current_user)
 			const toMails = [
 				{
 					"Email": user.email,
@@ -80,7 +90,7 @@ class ProjectMail{
 		try{
 			getEmailTemplate("project_submitted", language, (html_content) => {
 				html_content = BaseMail.fill_with_placeholder(html_content);
-				html_content = html_content.replace("{{akhlaquna_project_id", project._id);
+				html_content = html_content.replace("{{akhlaquna_project_id}}", project._id);
 				let text_content = "";
 				let subject = "Akhlaquna : Thank you for your project submission";
 				let messageInformation = setCommonMessageInformation(toMails, html_content, text_content, subject);
