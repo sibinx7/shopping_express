@@ -95,7 +95,7 @@ const STATIC_PLACEHOLDERS = {
 	"{{akhlaquna_contact}}":"",
 	"{{akhlaquna_terms_url}}":"",
 	"{{akhlaquna_terms}}":"",
-	"{{akhlaquna_award_end":SETTINGS.AKHLAQUNA_AWARD_END,
+	"{{akhlaquna_award_end}}":SETTINGS.AKHLAQUNA_AWARD_END,
 	"{{akhlaquna_award_end_date":SETTINGS.AKHLAQUNA_AWARD_END,
 	"{{akhlaquna_award_open":SETTINGS.AKHLAQUNA_AWARD_OPEN,
 	"{{akhlaquna_award_open_date":SETTINGS.AKHLAQUNA_AWARD_OPEN,

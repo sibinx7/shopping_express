@@ -75,6 +75,11 @@ export default class UserAPIController{
 											if(!user.completed_projects || !(user.completed_projects.length)){
 												user["completed_projects"] = completed_projects;
 											}
+										}else{
+											User.updateOne({_id:user._id}, {
+												completed_projects:[]
+											});
+											delete user.completed_projects;
 										}
 									}
 								}
