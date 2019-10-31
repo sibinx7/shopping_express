@@ -57,7 +57,7 @@ class HelperAPIController {
 								notifications.push({
 									type: "warning",
 									message:"Your profile is incomplete. Please add the missing information to be able to add a project. ",
-									intl_key:"your_profile_incomplete_add_missing_to_add_project",
+									intl_key:"project_profile_incomplete_notification",
 									show: true
 								})
 							}
@@ -74,7 +74,7 @@ class HelperAPIController {
 										notifications.push({
 											type:"warning",
 											message: "Your project is incomplete. Continue the missing part and submit before the deadline",
-											intl_key: "project_is_incomplete",
+											intl_key: "project_incomplete_notification",
 											show: true
 										})
 									}
@@ -82,7 +82,7 @@ class HelperAPIController {
 										notifications.push({
 											type:"warning",
 											message:"You have completed your project. Submit now",
-											intl_key: "project_completed_submit_now",
+											intl_key: "project_completed_notification",
 											show: true
 										})
 									}
@@ -91,7 +91,7 @@ class HelperAPIController {
 											notifications.push({
 												type: "success",
 												message: "Your project was successfully submitted",
-												intl_key: "project_submitted",
+												intl_key: "project_submitted_notification",
 												show: true
 											})
 										}
