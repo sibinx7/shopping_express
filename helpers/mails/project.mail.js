@@ -94,8 +94,10 @@ class ProjectMail{
 		console.log("Above project...")
 		try{
 			getEmailTemplate("project_submitted", language, (html_content) => {
-				let project_id = getProjectNumber(project._id, 8)
+				let project_id = getProjectNumber(project._id, 8);
 				html_content = html_content.replace("{{akhlaquna_project_id}}", project_id);
+				console.log(project_id)
+				console.log("Project subsctring...")
 				html_content = BaseMail.fill_with_placeholder(html_content);
 				let text_content = "";
 				let subject = "Akhlaquna : Thank you for your project submission";

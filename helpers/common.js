@@ -9,10 +9,15 @@ export const dateDifference = (date1, date2) => {
 }
 
 export const getProjectNumber = (id, length = 8) => {
+	console.log(id);
+	console.log(">>>>")
+	id = String(id);
 	let ID="";
 	try{
 		ID = id.substr(0,length)
 	}catch (e) {
+		console.log(e)
+		console.log("What error")
 	}
 	return ID;
 };
