@@ -16,7 +16,7 @@ const basic_auth = require("basic-auth");
 const notification_routes = require("./users.notification.api");
 
 const commonUserResponse = (result) => {
-	const {success, user, projects} = result;
+	const {success, user, projects, ...rest} = result;
 	let response = {};
 	response["success"] = success;
 	if(success){
@@ -27,6 +27,7 @@ const commonUserResponse = (result) => {
 			response["projects"] = projects;
 		}
 	}
+	response = {...response, ...rest}
 	return response;
 };
 

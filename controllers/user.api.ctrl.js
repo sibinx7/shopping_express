@@ -253,6 +253,9 @@ export default class UserAPIController{
 			User.updateOne({_id, password: Base64.encode(old_password)}, {
 				password: Base64.encode(new_password)
 			}, (err, user) => {
+				console.log(err)
+				console.log(user)
+				console.log("Something bad on password change...")
 				if(!err){
 					// Call Reset password
 					if(user.n){
