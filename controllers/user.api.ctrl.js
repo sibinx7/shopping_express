@@ -258,20 +258,27 @@ export default class UserAPIController{
 				console.log("Something bad on password change...")
 				if(!err){
 					// Call Reset password
-					if(user.n){
-						callback({
-							success: true,
-							user
-						})
+					if(user){
+						if(user.n){
+							callback({
+								success: true,
+								user
+							})
+						}else{
+							callback({
+								success: false,
+								user,
+								error: "Your old password is incorrect",
+								error_intl:"incorrect_password"
+							})
+						}
 					}else{
 						callback({
 							success: false,
-							user,
 							error: "Your old password is incorrect",
 							error_intl:"incorrect_password"
 						})
 					}
-
 				}else{
 					callback({
 						success: false
