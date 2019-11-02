@@ -21,8 +21,15 @@ const checkLoggedOneIsUser = (user) => {
 	if(!!user && user.roles && !user.roles.length){
 		userIsUser = true;
 	}
+	if(!!user && !user.roles){
+		userIsUser = true;
+	}
+	console.log(user)
+	console.log(userIsUser)
+	console.log("User is User...")
 	return userIsUser;
 };
+
 
 export default class UserAPIController{
 	static login = (formData, callback) => {
@@ -36,7 +43,7 @@ export default class UserAPIController{
 				console.log(user)
 				console.log("Hello User...")
 				console.log(checkLoggedOneIsUser(user))
-				console.log("########################################################")
+				console.log("########################################################");
 				if(!err){
 					// Check whether project complete or not
 					if(!user){
