@@ -270,17 +270,22 @@ const tweetHandler = (req, res, next) => {
 			});
 			response.on("end", () => {
 				let tweetData = JSON.parse(data);
-				let tweets = {
-					published_at: tweetData[0].created_at,
-					content:{
-						ar: tweetData[0].text,
-						en: tweetData[1].text
-					},
-					thumbnail:{
-						ar: tweetData[0].entities.media[0]["media_url"],
-						en: tweetData[1].entities.media[0]["media_url"]
-					}
-				};
+				let tweets = {};
+				try{
+					tweets = {
+						published_at: tweetData[0].created_at,
+						content:{
+							ar: tweetData[0].text,
+							en: tweetData[1].text
+						},
+						thumbnail:{
+							ar: tweetData[0].entities.media[0]["media_url"],
+							en: tweetData[1].entities.media[0]["media_url"]
+						}
+					};
+				}catch (e) {
+
+				}
 				res.json({
 					success: true,
 					tweets
