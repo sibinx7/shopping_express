@@ -241,12 +241,20 @@ export default class UserAPIController{
 		formData["updated_at"] = new Date();
 		formData["last_active"] = new Date();
 		formData["active"] = true;
-		User.updateOne({_id}, formData, (err, write) => {
-			console.log(JSON.stringify(err))
+		User.updateOne({_id}, formData, (err, updatedInfor) => {
 			if(!err){
-				callback({
-					success: true,
-					user: formData
+				User.findOne({_id}, (err, updatedUser) => {
+					if(!err && updatedUser){
+						callback({
+							success: true,
+							user: updatedUser
+						})
+					}else{
+						callback({
+							success: true,
+							user: formData
+						})
+					}
 				})
 			}else{
 				callback({
