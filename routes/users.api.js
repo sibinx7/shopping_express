@@ -1,4 +1,4 @@
-import {ENGLISH_REGEX_TEST} from "../helpers/common";
+import {ARABIC_REGEX_TEXT, ENGLISH_REGEX_TEST} from "../helpers/common";
 
 var express = require('express');
 const app = express();
@@ -300,6 +300,17 @@ const tweetHandler = (req, res, next) => {
 							language_en = 1;
 							language_ar = 0;
 						}
+
+						if(ARABIC_REGEX_TEXT.test(checkLanguageOne)){
+							language_en = 1;
+							language_ar = 0;
+						}
+
+						if(ARABIC_REGEX_TEXT.test(checkLanguageTwo)){
+							language_en =0;
+							language_ar = 1;
+						}
+
 						console.log(language_ar, "Arabic");
 						console.log(language_en, "English");
 						tweets = {

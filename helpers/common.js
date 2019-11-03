@@ -24,3 +24,4 @@ export const getProjectNumber = (id, length = 8) => {
 
 
 export const ENGLISH_REGEX_TEST = /^[a-zA-Z!@#$%^&*(),.?":{}|<>\.\s]+$/g;
+export const ARABIC_REGEX_TEXT = /[\u0600-\u06FF]/;
