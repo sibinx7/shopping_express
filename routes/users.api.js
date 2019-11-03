@@ -1,3 +1,5 @@
+import {ENGLISH_REGEX_TEST} from "../helpers/common";
+
 var express = require('express');
 const app = express();
 var router = express.Router();
@@ -269,24 +271,63 @@ const tweetHandler = (req, res, next) => {
 				data += result;
 			});
 			response.on("end", () => {
+				console.log("Tweet issues")
 				let tweetData = JSON.parse(data);
 				let tweets = {};
 				try{
 					if(tweetData && Array.isArray(tweetData)){
+						let language_en= 1;
+						let language_ar = 0;
+						const englishLanguageCheck = ENGLISH_REGEX_TEST;
+						let checkLanguageOne = String(tweetData[0].text);
+						let checkLanguageTwo = String(tweetData[1].text);
+						console.log(checkLanguageOne)
+						checkLanguageOne = checkLanguageOne.substr(0, checkLanguageOne.lastIndexOf("…") - 1);
+						checkLanguageTwo = checkLanguageTwo.substr(0, checkLanguageTwo.lastIndexOf("…") - 1);
+
+						console.log(checkLanguageOne, "One")
+						console.log(checkLanguageTwo, "Two");
+						console.log("Check langauge...")
+						console.log("First check")
+						if(englishLanguageCheck.test(checkLanguageOne)){
+							console.log("Check english one win")
+							language_en =0;
+							language_ar = 1;
+						}
+						console.log("Second check")
+						if(englishLanguageCheck.test(checkLanguageTwo)){
+							console.log("Checkl english l;anguage 2 win")
+							language_en = 1;
+							language_ar = 0;
+						}
+						console.log(language_ar, "Arabic");
+						console.log(language_en, "English");
 						tweets = {
 							published_at: tweetData[0].created_at,
 							content:{
-								ar: tweetData[0].text,
-								en: tweetData[1].text
+								ar: tweetData[language_ar].text,
+								en: tweetData[language_en].text
 							},
-							thumbnail:{
-								ar: tweetData[0].entities.media[0]["media_url"],
-								en: tweetData[1].entities.media[0]["media_url"]
-							}
 						};
+						tweets["urls"] = {};
+						if(tweetData[language_ar].entities && tweetData[language_ar].entities.urls[0]){
+							tweets["urls"]["ar"] = tweetData[0].entities.urls[0]["expanded_url"]
+						}
+						if(tweetData[language_en].entities && tweetData[language_en].entities.urls[0]){
+							tweets["urls"]["en"] = tweetData[language_en].entities.urls[0]["expanded_url"]
+						}
+						try{
+							tweets['thumbnail'] = {
+								ar: tweetData[language_ar].entities.media[0]["media_url"],
+								en: tweetData[language_en].entities.media[0]["media_url"]
+							}
+						}catch (e) {
+
+						}
 					}
 				}catch (e) {
-
+					console.log(e)
+					console.log("tweetData issues")
 				}
 				res.json({
 					success: true,
@@ -295,6 +336,8 @@ const tweetHandler = (req, res, next) => {
 			})
 		});
 		requestGet.on("error", (error) => {
+			console.log(error);
+			console.log("Twitter issues....")
 			res.json({
 				success: false,
 				error,
