@@ -1,8 +1,9 @@
-import Newsletter from "../helpers/mails/notification.mail";
+import NewsletterMail from "../helpers/mails/notification.mail";
 import {getEmailTemplate} from "../helpers/mails/template";
 import Project from "../models/Project";
 import { checkProjectCompleteness } from '../helpers/projects/index';
 import {checkUserComplete} from "../helpers/user";
+import NewsletterSubscriber from "../models/NewsletterSubscriber";
 const fs = require("fs");
 const path = require("path");
 
@@ -30,13 +31,46 @@ class HelperAPIController {
 	}
 
 	static subscribe = (email, callback) => {
-		Newsletter.subscribe(email, ({success, message, error}) => {
-			callback({success})
+
+		NewsletterSubscriber.countDocuments({email}, (err, emailCount) => {
+			if(!err){
+				if(emailCount){ // Al	ready exists
+					callback({
+						success: false,
+						message: "This email address already subscribed",
+						error: "Email already exist",
+						code: "you_already_subscribed"
+					})
+				}else{ // Create mew
+					const formData = {
+						email,
+						created_at: new Date()
+					};
+					NewsletterSubscriber.create(formData, (err, newsletter) => {
+						if(!err){
+							if(newsletter){ // created
+								NewsletterMail.subscribe(email, ({success, message, error}) => {
+									callback({success, code:"thank_you_for_subscribing", message:"Thank you for subscribing"})
+								})
+							}else{
+								callback({
+									success: false,
+									error:"Mail not send",
+									message: "Email successfully saved to database",
+								})
+							}
+						}
+					})
+				}
+			}else{
+				callback({
+					success: false
+				})
+			}
 		})
 	}
 
 	static check_email = (callback) => {
-
 		getEmailTemplate("notification_mail", null, (data) => {
 			data = data.replace("{{akhlaquna_activation_link}}", "<SOME_LINK>");
 			callback(data)

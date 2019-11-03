@@ -11,7 +11,7 @@ let FromMails = [
 ]
 
 
-class Newsletter {
+class NewsletterMail {
 	static subscribe (email, callback) {
 		let newsletterTemplate = NewsletterTemplate();
 		let messageInformation = {
@@ -48,4 +48,4 @@ class Newsletter {
 
 }
 
-export default Newsletter;
+export default NewsletterMail;

@@ -175,11 +175,12 @@ const subscribeHandler = (req, res, next) => {
 	try{
 		const {	email } = req.params;
 		if(email){
-			HelperAPIController.subscribe(email, ({success, message, error}) => {
+			HelperAPIController.subscribe(email, ({success, message, error, code}) => {
 				res.json({
 					success,
 					message,
-					error
+					error,
+					code
 				})
 			})
 		}else{
@@ -659,7 +660,10 @@ const statusNotificationHandler = (req, res, next) => {
 	});
 }
 
-router.get("/status-notifications", statusNotificationHandler)
+router.get("/status-notifications", statusNotificationHandler);
+
+
+
 router.use("/notifications", notification_routes);
 
 
