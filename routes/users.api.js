@@ -282,6 +282,12 @@ const tweetHandler = (req, res, next) => {
 						const englishLanguageCheck = ENGLISH_REGEX_TEST;
 						let checkLanguageOne = String(tweetData[0].text);
 						let checkLanguageTwo = String(tweetData[1].text);
+						if((/\n/ig).test(checkLanguageTwo)){
+							checkLanguageTwo = checkLanguageTwo.replace(/\n/ig, "<br/>")
+						}
+						if((/\n/ig).test(checkLanguageOne)){
+							checkLanguageOne = checkLanguageOne.replace(/\n/ig, "<br/>")
+						}
 						console.log(checkLanguageOne)
 						checkLanguageOne = checkLanguageOne.substr(0, checkLanguageOne.lastIndexOf("…") - 1);
 						checkLanguageTwo = checkLanguageTwo.substr(0, checkLanguageTwo.lastIndexOf("…") - 1);
