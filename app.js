@@ -61,7 +61,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.options('*', cors());
 
-app.use("/api", cors(),  usersAPIRouter); // csrf token exception
+app.use("/api",  usersAPIRouter); // csrf token exception
 
 
 app.use(cookieParser());
