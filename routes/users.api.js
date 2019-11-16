@@ -282,6 +282,13 @@ const tweetHandler = (req, res, next) => {
 						const englishLanguageCheck = ENGLISH_REGEX_TEST;
 						let checkLanguageOne = String(tweetData[0].text);
 						let checkLanguageTwo = String(tweetData[1].text);
+						try{
+							checkLanguageOne = String(tweetData[0].full_text);
+							checkLanguageTwo = String(tweetData[1].full_text);
+						}catch (e) {
+
+						}
+
 						if((/\n/ig).test(checkLanguageTwo)){
 							checkLanguageTwo = checkLanguageTwo.replace(/\n/ig, "<br/>")
 						}
@@ -289,8 +296,8 @@ const tweetHandler = (req, res, next) => {
 							checkLanguageOne = checkLanguageOne.replace(/\n/ig, "<br/>")
 						}
 						console.log(checkLanguageOne)
-						checkLanguageOne = checkLanguageOne.substr(0, checkLanguageOne.lastIndexOf("…") - 1);
-						checkLanguageTwo = checkLanguageTwo.substr(0, checkLanguageTwo.lastIndexOf("…") - 1);
+						// checkLanguageOne = checkLanguageOne.substr(0, checkLanguageOne.lastIndexOf("…") - 1);
+						// checkLanguageTwo = checkLanguageTwo.substr(0, checkLanguageTwo.lastIndexOf("…") - 1);
 
 						console.log(checkLanguageOne, "One")
 						console.log(checkLanguageTwo, "Two");
@@ -327,6 +334,12 @@ const tweetHandler = (req, res, next) => {
 								en: tweetData[language_en].text
 							},
 						};
+						if(tweetData[language_ar].full_text){
+							tweets['content']['ar'] = tweetData[language_ar].full_text;
+						}
+						if(tweetData[language_en].full_text){
+							tweets['content']['en'] = tweetData[language_en].full_text;
+						}
 						tweets["urls"] = {};
 						if(tweetData[language_ar].entities && tweetData[language_ar].entities.urls[0]){
 							tweets["urls"]["ar"] = tweetData[0].entities.urls[0]["expanded_url"]
