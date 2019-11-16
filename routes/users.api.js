@@ -259,7 +259,7 @@ const tweetHandler = (req, res, next) => {
 		const TWITTER_TOKEN = process.env.TWITTER_TOKEN;
 		const requestOptions = {
 			hostname:`api.twitter.com`,
-			path:`/1.1/statuses/user_timeline.json?user_id=${TWITTER_ID}&count=2`,
+			path:`/1.1/statuses/user_timeline.json?user_id=${TWITTER_ID}&count=2&tweet_mode=extended`,
 			method:"GET",
 			headers:{
 				"Content-Type": "utf-8",
