@@ -355,6 +355,28 @@ const tweetHandler = (req, res, next) => {
 						}catch (e) {
 
 						}
+
+						// For Videos
+						tweets["video"] = {};
+						console.log("Video...")
+						console.log(JSON.stringify(tweetData[language_ar]["extended_entities"]));
+						try{
+							if(tweetData[language_ar]["extended_entities"]){
+								tweets["video"]["ar"] = tweetData[language_ar]["extended_entities"]["media"][0]["video_info"]["variants"][0]["url"];
+							}
+						}catch (e) {
+							console.log("Error video in QA")
+							console.log(e)
+						}
+
+						try{
+							if(tweetData[language_en]["extended_entities"]){
+								tweets["video"]["en"] = tweetData[language_en]["extended_entities"]["media"][0]["video_info"]["variants"][0]["url"]
+							}
+						}catch (e) {
+							console.log(e)
+							console.log("Error video in EN")
+						}
 					}
 				}catch (e) {
 					console.log(e)
