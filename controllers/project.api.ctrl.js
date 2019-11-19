@@ -29,7 +29,9 @@ export default class ProjectAPIController{
 			options["skip"] = skip;
 		}
 
-		let filterOptions = {};
+		let filterOptions = {
+			submitted: true
+		};
 		if(filters){
 			if(filters.search){
 				filterOptions["title"] = {
