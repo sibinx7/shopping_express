@@ -47,7 +47,7 @@
     "rimraf": "^3.0.0",
     "sequelize": "^5.21.2",
     "tedious": "^6.6.0",
-    "underscore": "^1.9.1"
+    "underscore": "^1.12.1"
   },
   "main": "app.js",
   "devDependencies": {},
